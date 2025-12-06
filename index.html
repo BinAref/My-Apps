@@ -49,6 +49,7 @@
             position: relative;
             overflow-x: hidden;
             transition: background 0.3s ease;
+            max-width: 100vw;
         }
 
         body::before {
@@ -102,6 +103,7 @@
             padding: 40px 20px;
             position: relative;
             z-index: 1;
+            overflow-x: hidden;
         }
 
         .header {
@@ -504,7 +506,7 @@
             }
 
             .features-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: 1fr 1fr;
                 gap: 8px;
             }
 
@@ -524,6 +526,10 @@
         @media (max-width: 480px) {
             .apps-grid .app-card {
                 width: 100% !important;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr 1fr;
             }
         }
     </style>
