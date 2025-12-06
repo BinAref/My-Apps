@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BinAref - التطبيقات</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-gradient-start: #0f172a;
+            --bg-gradient-mid: #1e293b;
+            --bg-gradient-end: #334155;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --card-hover-bg: rgba(30, 41, 59, 0.85);
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --border-color: rgba(148, 163, 184, 0.2);
+            --shadow-color: rgba(0, 0, 0, 0.5);
+            --btn-bg: rgba(59, 130, 246, 0.2);
+            --btn-hover-bg: rgba(59, 130, 246, 0.35);
+            --accent-color: #3b82f6;
+        }
+
+        [data-theme="light"] {
+            --bg-gradient-start: #1e3c72;
+            --bg-gradient-mid: #2a5298;
+            --bg-gradient-end: #7e8ba3;
+            --card-bg: rgba(255, 255, 255, 0.15);
+            --card-hover-bg: rgba(255, 255, 255, 0.25);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.95);
+            --border-color: rgba(255, 255, 255, 0.25);
+            --shadow-color: rgba(0, 0, 0, 0.3);
+            --btn-bg: rgba(255, 255, 255, 0.2);
+            --btn-hover-bg: rgba(255, 255, 255, 0.35);
+            --accent-color: #60a5fa;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-mid) 50%, var(--bg-gradient-end) 100%);
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+            transition: background 0.3s ease;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: moveBackground 20s linear infinite;
+            opacity: 0.5;
+        }
+
+        @keyframes moveBackground {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            border-radius: 50px;
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px var(--shadow-color),
+                        0 8px 30px var(--shadow-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .theme-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px var(--shadow-color),
+                        0 12px 40px var(--shadow-color);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .brand-name {
+            color: var(--text-primary);
+            font-size: clamp(36px, 6vw, 56px);
+            font-weight: 700;
+            margin-bottom: 12px;
+            text-shadow: 0 4px 20px var(--shadow-color),
+                        0 8px 40px var(--shadow-color);
+            letter-spacing: 3px;
+            animation: fadeInDown 0.8s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .brand-icon {
+            font-size: clamp(40px, 7vw, 60px);
+            filter: drop-shadow(0 4px 15px var(--shadow-color));
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .brand-subtitle {
+            color: var(--text-secondary);
+            font-size: clamp(16px, 2vw, 20px);
+            font-weight: 300;
+            letter-spacing: 1px;
+            animation: fadeInUp 0.8s ease 0.2s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .apps-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-top: 30px;
+            justify-content: center;
+        }
+
+        .apps-grid:has(.app-card:only-child) .app-card {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .apps-grid:has(.app-card:nth-child(2):last-child) .app-card {
+            width: calc(50% - 15px);
+            min-width: 280px;
+        }
+
+        .apps-grid:has(.app-card:nth-child(3)) .app-card {
+            width: calc(33.333% - 20px);
+            min-width: 280px;
+        }
+
+        .app-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 25px 20px;
+            border: 1px solid var(--border-color);
+            transition: all 0.4s ease;
+            box-shadow: 0 8px 32px var(--shadow-color),
+                        0 16px 64px var(--shadow-color);
+            animation: fadeIn 0.8s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .app-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-color), #8b5cf6, var(--accent-color));
+            background-size: 200% 100%;
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { background-position: 0% 0%; }
+            50% { background-position: 100% 0%; }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .app-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 16px 48px var(--shadow-color),
+                        0 24px 80px var(--shadow-color);
+            background: var(--card-hover-bg);
+        }
+
+        .app-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 15px;
+            background: linear-gradient(135deg, var(--accent-color), #8b5cf6);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            box-shadow: 0 8px 24px var(--shadow-color),
+                        0 16px 48px var(--shadow-color);
+            transition: all 0.3s ease;
+        }
+
+        .app-card:hover .app-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .app-name {
+            color: var(--text-primary);
+            font-size: clamp(18px, 3vw, 22px);
+            font-weight: 800;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 10px var(--shadow-color);
+            letter-spacing: 0.5px;
+        }
+
+        .app-version {
+            display: inline-block;
+            background: rgba(139, 92, 246, 0.2);
+            color: var(--text-primary);
+            padding: 3px 10px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+        }
+
+        .app-description {
+            color: var(--text-secondary);
+            font-size: clamp(13px, 2vw, 14px);
+            margin-bottom: 15px;
+            line-height: 1.6;
+            min-height: auto;
+            font-weight: 400;
+        }
+
+        .app-stats {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--text-secondary);
+            font-size: 11px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 5px 10px;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+        }
+
+        .stat-icon {
+            font-size: 12px;
+        }
+
+        .app-features {
+            list-style: none;
+            margin-bottom: 20px;
+            text-align: right;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 14px;
+            border: 1px solid var(--border-color);
+        }
+
+        .features-title {
+            color: var(--text-primary);
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .app-features li {
+            color: var(--text-secondary);
+            font-size: 12px;
+            padding: 6px 0;
+            position: relative;
+            padding-right: 22px;
+            line-height: 1.5;
+            transition: all 0.2s ease;
+        }
+
+        .app-features li:hover {
+            color: var(--text-primary);
+            padding-right: 26px;
+        }
+
+        .app-features li:before {
+            content: "✓";
+            position: absolute;
+            right: 0;
+            color: var(--accent-color);
+            font-weight: bold;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .app-features li:hover:before {
+            transform: scale(1.2);
+        }
+
+        .download-btn {
+            background: var(--btn-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 12px 30px;
+            font-size: clamp(14px, 2vw, 16px);
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 15px var(--shadow-color),
+                        0 8px 30px var(--shadow-color);
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .download-btn:hover {
+            background: var(--btn-hover-bg);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px var(--shadow-color),
+                        0 12px 40px var(--shadow-color);
+        }
+
+        .download-btn:active {
+            transform: translateY(0);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 30px;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        @media (max-width: 1024px) {
+            .apps-grid:has(.app-card:nth-child(3)) .app-card {
+                width: calc(50% - 15px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .theme-toggle {
+                top: 10px;
+                left: 10px;
+                padding: 10px 16px;
+                font-size: 14px;
+            }
+
+            .container {
+                padding: 30px 15px;
+            }
+
+            .header {
+                margin-bottom: 40px;
+            }
+
+            .apps-grid {
+                gap: 20px;
+            }
+
+            .apps-grid .app-card {
+                width: calc(50% - 10px) !important;
+                min-width: unset !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .apps-grid .app-card {
+                width: 100% !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()">
+        <span id="theme-icon">🌙</span>
+        <span id="theme-text">الوضع الفاتح</span>
+    </button>
+
+    <div class="container">
+        <div class="header">
+            <div class="brand-name">
+                <span class="brand-icon">💻</span>
+                <span>BinAref</span>
+            </div>
+            <div class="brand-subtitle">تطبيقات احترافية لتجربة مميزة</div>
+        </div>
+
+        <div class="apps-grid">
+            <!-- تطبيق الأذكار -->
+            <div class="app-card">
+                <div class="app-icon">📿</div>
+                <div class="app-name">أذكاري</div>
+                <div class="app-version">الإصدار 1.0</div>
+                <div class="app-description">
+                    رفيقك اليومي للأذكار والأدعية مع إمكانية التخصيص الكامل
+                </div>
+                
+                <div class="app-stats">
+                    <div class="stat-item">
+                        <span class="stat-icon">📦</span>
+                        <span>15 MB</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-icon">⭐</span>
+                        <span>مجاني</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-icon">📱</span>
+                        <span>Android 5.0+</span>
+                    </div>
+                </div>
+
+                <div class="app-features">
+                    <div class="features-title">المميزات الرئيسية</div>
+                    <li>مكتبة شاملة للأذكار</li>
+                    <li>أذكار الصباح والمساء</li>
+                    <li>إضافة أذكار مخصصة</li>
+                    <li>تنبيهات وإشعارات ذكية</li>
+                    <li>تصميم أنيق ومريح للعين</li>
+                </div>
+
+                <button class="download-btn" onclick="downloadApp('https://github.com/BinAref/My-Apps/releases/download/v1.0/Azkari.apk')">
+                    <span>⬇</span>
+                    <span>تحميل التطبيق</span>
+                </button>
+            </div>
+
+            <!-- تطبيق إدارة المحتوى -->
+            <div class="app-card">
+                <div class="app-icon">📱</div>
+                <div class="app-name">إدارة المحتوى</div>
+                <div class="app-version">الإصدار 1.0</div>
+                <div class="app-description">
+                    منصة متكاملة لإدارة ونشر المحتوى الرقمي بجميع أنواعه
+                </div>
+
+                <div class="app-stats">
+                    <div class="stat-item">
+                        <span class="stat-icon">📦</span>
+                        <span>28 MB</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-icon">⭐</span>
+                        <span>مجاني</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-icon">📱</span>
+                        <span>Android 5.0+</span>
+                    </div>
+                </div>
+
+                <div class="app-features">
+                    <div class="features-title">المميزات الرئيسية</div>
+                    <li>نشر ومشاهدة المنشورات</li>
+                    <li>مكتبة الكتب الإلكترونية</li>
+                    <li>مشغل الفيديوهات المتقدم</li>
+                    <li>مشغل الصوتيات والبودكاست</li>
+                    <li>واجهة سهلة وبديهية</li>
+                </div>
+
+                <button class="download-btn" onclick="downloadApp('https://github.com/BinAref/My-Apps/releases/download/v1.0/Minstiry.apk')">
+                    <span>⬇</span>
+                    <span>تحميل التطبيق</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>جميع الحقوق محفوظة © 2025 BinAref</p>
+            <p style="margin-top: 10px; font-size: 13px; opacity: 0.8;">تم التطوير بكل شغف ❤️</p>
+        </div>
+    </div>
+
+    <script>
+        // نظام الثيم
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            updateThemeButton(newTheme);
+        }
+
+        function updateThemeButton(theme) {
+            const icon = document.getElementById('theme-icon');
+            const text = document.getElementById('theme-text');
+            
+            if (theme === 'light') {
+                icon.textContent = '🌙';
+                text.textContent = 'الوضع الداكن';
+            } else {
+                icon.textContent = '☀️';
+                text.textContent = 'الوضع الفاتح';
+            }
+        }
+
+        // تحميل الثيم المحفوظ
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            updateThemeButton(savedTheme);
+        });
+
+        // دالة التحميل
+        function downloadApp(githubUrl) {
+            window.location.href = githubUrl;
+        }
+    </script>
+</body>
+</html>
