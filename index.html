@@ -12,45 +12,53 @@
         }
 
         :root {
-            --bg-gradient-start: #0f172a;
-            --bg-gradient-mid: #1e293b;
-            --bg-gradient-end: #334155;
-            --card-bg: rgba(30, 41, 59, 0.7);
-            --card-hover-bg: rgba(30, 41, 59, 0.85);
-            --text-primary: #f1f5f9;
-            --text-secondary: #cbd5e1;
-            --border-color: rgba(148, 163, 184, 0.2);
-            --shadow-color: rgba(0, 0, 0, 0.5);
-            --btn-bg: rgba(59, 130, 246, 0.2);
-            --btn-hover-bg: rgba(59, 130, 246, 0.35);
+            --bg-gradient-start: #000000;
+            --bg-gradient-mid: #0a0a0a;
+            --bg-gradient-end: #1a1a1a;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-hover-bg: rgba(255, 255, 255, 0.08);
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0a0;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --shadow-color: rgba(0, 0, 0, 0.8);
+            --btn-bg: rgba(59, 130, 246, 0.15);
+            --btn-hover-bg: rgba(59, 130, 246, 0.25);
             --accent-color: #3b82f6;
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-shadow: rgba(255, 255, 255, 0.05);
+            --dialog-overlay-bg: rgba(0, 0, 0, 0.85);
         }
 
         [data-theme="light"] {
-            --bg-gradient-start: #1a2332;
-            --bg-gradient-mid: #243447;
-            --bg-gradient-end: #2d3e50;
-            --card-bg: rgba(40, 50, 70, 0.7);
-            --card-hover-bg: rgba(40, 50, 70, 0.85);
-            --text-primary: #f1f5f9;
-            --text-secondary: #cbd5e1;
-            --border-color: rgba(148, 163, 184, 0.25);
-            --shadow-color: rgba(0, 0, 0, 0.4);
-            --btn-bg: rgba(59, 130, 246, 0.25);
-            --btn-hover-bg: rgba(59, 130, 246, 0.4);
-            --accent-color: #60a5fa;
+            --bg-gradient-start: #e0f2fe;
+            --bg-gradient-mid: #bae6fd;
+            --bg-gradient-end: #7dd3fc;
+            --card-bg: rgba(255, 255, 255, 0.7);
+            --card-hover-bg: rgba(255, 255, 255, 0.9);
+            --text-primary: #0c4a6e;
+            --text-secondary: #075985;
+            --border-color: rgba(14, 165, 233, 0.2);
+            --shadow-color: rgba(14, 165, 233, 0.15);
+            --btn-bg: rgba(14, 165, 233, 0.15);
+            --btn-hover-bg: rgba(14, 165, 233, 0.25);
+            --accent-color: #0ea5e9;
+            --glass-border: rgba(255, 255, 255, 0.5);
+            --glass-shadow: rgba(14, 165, 233, 0.1);
+            --dialog-overlay-bg: rgba(186, 230, 253, 0.75);
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
         }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-mid) 50%, var(--bg-gradient-end) 100%);
-            min-height: 100vh;
-            padding: 20px;
-            padding-bottom: 0;
             position: relative;
-            overflow-x: hidden;
             transition: background 0.3s ease;
-            max-width: 100vw;
+            display: flex;
+            flex-direction: column;
         }
 
         body::before {
@@ -72,64 +80,135 @@
             100% { transform: translate(50px, 50px); }
         }
 
-        .theme-toggle {
+        .controls-container {
             position: fixed;
-            top: 20px;
-            left: 20px;
+            top: 15px;
+            right: 15px;
             z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .theme-toggle {
             background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--border-color);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid var(--glass-border);
             border-radius: 50px;
-            padding: 12px 20px;
+            padding: 3px;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px var(--shadow-color),
-                        0 8px 30px var(--shadow-color);
+            box-shadow: 0 8px 32px var(--glass-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.1);
             display: flex;
             align-items: center;
-            gap: 8px;
-            color: var(--text-primary);
-            font-weight: 600;
+            width: 60px;
+            height: 30px;
+            position: relative;
         }
 
         .theme-toggle:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px var(--shadow-color),
-                        0 12px 40px var(--shadow-color);
+            box-shadow: 0 12px 40px var(--glass-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            background: var(--card-hover-bg);
+        }
+
+        .theme-slider {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        [data-theme="dark"] .theme-slider {
+            right: 3px;
+        }
+
+        [data-theme="light"] .theme-slider {
+            right: calc(100% - 27px);
+        }
+
+        .view-toggle {
+            background: var(--card-bg);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            padding: 3px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 32px var(--glass-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            width: 60px;
+            height: 30px;
+            position: relative;
+        }
+
+        .view-toggle:hover {
+            box-shadow: 0 12px 40px var(--glass-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            background: var(--card-hover-bg);
+        }
+
+        .view-slider {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            right: 3px;
+        }
+
+        .view-slider.list-active {
+            right: calc(100% - 27px);
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 40px 20px;
+            padding: 20px;
             position: relative;
             z-index: 1;
-            overflow-x: hidden;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
         }
 
         .header {
             text-align: center;
-            margin-bottom: 60px;
+            margin-bottom: 30px;
+            flex-shrink: 0;
         }
 
         .brand-name {
             color: var(--text-primary);
-            font-size: clamp(36px, 6vw, 56px);
+            font-size: 32px;
             font-weight: 700;
-            margin-bottom: 12px;
-            text-shadow: 0 4px 20px var(--shadow-color),
-                        0 8px 40px var(--shadow-color);
-            letter-spacing: 3px;
+            margin-bottom: 8px;
+            text-shadow: 0 4px 20px var(--shadow-color);
+            letter-spacing: 2px;
             animation: fadeInDown 0.8s ease;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 15px;
+            gap: 10px;
         }
 
         .brand-icon {
-            font-size: clamp(40px, 7vw, 60px);
+            font-size: 36px;
             filter: drop-shadow(0 4px 15px var(--shadow-color));
         }
 
@@ -146,9 +225,9 @@
 
         .brand-subtitle {
             color: var(--text-secondary);
-            font-size: clamp(16px, 2vw, 20px);
+            font-size: 14px;
             font-weight: 300;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
             animation: fadeInUp 0.8s ease 0.2s both;
         }
 
@@ -164,58 +243,92 @@
         }
 
         .apps-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 30px;
-            margin-top: 30px;
-            justify-content: center;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            max-width: 550px;
+            margin: 0 auto;
+            flex: 0 1 auto;
+            transition: all 0.4s ease;
         }
 
-        .apps-grid:has(.app-card:only-child) .app-card {
-            width: 100%;
-            max-width: 400px;
-        }
-
-        .apps-grid:has(.app-card:nth-child(2):last-child) .app-card {
-            width: calc(50% - 15px);
-            min-width: 280px;
-        }
-
-        .apps-grid:has(.app-card:nth-child(3)) .app-card {
-            width: calc(33.333% - 20px);
-            min-width: 280px;
+        .apps-grid.list-view {
+            grid-template-columns: 1fr;
+            max-width: 450px;
         }
 
         .app-card {
             background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: 24px;
-            padding: 30px 25px;
-            border: 1px solid var(--border-color);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border-radius: 20px;
+            padding: 20px 18px;
+            border: 1px solid var(--glass-border);
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 8px 32px var(--shadow-color),
-                        0 16px 64px var(--shadow-color);
+            box-shadow: 
+                0 8px 32px var(--glass-shadow),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.1);
             animation: fadeIn 0.8s ease;
             position: relative;
-            overflow: hidden;
+            overflow: visible;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .apps-grid.list-view .app-card {
+            flex-direction: row;
+            text-align: right;
+            padding: 18px;
+        }
+
+        .apps-grid.list-view .app-icon {
+            margin-bottom: 0;
+            margin-left: 18px;
+            flex-shrink: 0;
+        }
+
+        .apps-grid.list-view .app-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .apps-grid.list-view .app-description {
+            text-align: right;
+        }
+
+        .apps-grid.list-view .view-details-btn {
+            align-self: flex-start;
         }
 
         .app-card::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--accent-color), #8b5cf6, var(--accent-color));
-            background-size: 200% 100%;
-            animation: shimmer 3s infinite;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(135deg, var(--accent-color), #8b5cf6, var(--accent-color));
+            background-size: 300% 300%;
+            border-radius: 20px;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            animation: gradientMove 4s ease infinite;
         }
 
-        @keyframes shimmer {
-            0%, 100% { background-position: 0% 0%; }
-            50% { background-position: 100% 0%; }
+        @keyframes gradientMove {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .app-card:hover::before {
+            opacity: 0.3;
         }
 
         @keyframes fadeIn {
@@ -230,244 +343,289 @@
         }
 
         .app-card:hover {
-            transform: translateY(-12px) scale(1.02);
-            box-shadow: 0 20px 60px var(--shadow-color),
-                        0 30px 90px var(--shadow-color);
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 
+                0 20px 60px var(--glass-shadow),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.1);
             background: var(--card-hover-bg);
-            border-color: rgba(148, 163, 184, 0.3);
+            border-color: var(--accent-color);
+        }
+
+        .apps-grid.list-view .app-card:hover {
+            transform: translateX(-8px) scale(1.01);
         }
 
         .app-icon {
-            width: 70px;
-            height: 70px;
-            margin: 0 auto 20px;
+            width: 60px;
+            height: 60px;
+            margin-bottom: 12px;
             background: linear-gradient(135deg, var(--accent-color), #8b5cf6);
-            border-radius: 20px;
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 36px;
-            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.4),
-                        0 20px 50px var(--shadow-color);
+            font-size: 30px;
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .app-card:hover .app-icon {
-            transform: scale(1.15) rotate(8deg);
-            box-shadow: 0 15px 40px rgba(59, 130, 246, 0.6),
-                        0 25px 60px var(--shadow-color);
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 12px 35px rgba(59, 130, 246, 0.6);
+        }
+
+        .app-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
         }
 
         .app-name {
             color: var(--text-primary);
-            font-size: clamp(20px, 3vw, 24px);
+            font-size: 16px;
             font-weight: 800;
-            margin-bottom: 10px;
-            text-shadow: 0 2px 10px var(--shadow-color);
-            letter-spacing: 0.5px;
-        }
-
-        .app-version {
-            display: inline-block;
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.25), rgba(59, 130, 246, 0.25));
-            color: var(--text-primary);
-            padding: 5px 14px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 700;
-            margin-bottom: 15px;
-            border: 1px solid rgba(139, 92, 246, 0.4);
-            box-shadow: 0 2px 8px rgba(139, 92, 246, 0.2);
+            margin-bottom: 8px;
+            letter-spacing: 0.3px;
         }
 
         .app-description {
             color: var(--text-secondary);
-            font-size: clamp(14px, 2vw, 15px);
-            margin-bottom: 20px;
-            line-height: 1.7;
-            min-height: auto;
-            font-weight: 400;
-        }
-
-        .app-stats {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .stat-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            color: var(--text-secondary);
             font-size: 12px;
-            background: rgba(255, 255, 255, 0.08);
-            padding: 8px 14px;
-            border-radius: 20px;
-            border: 1px solid var(--border-color);
-            font-weight: 600;
+            line-height: 1.4;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .view-details-btn {
+            background: var(--btn-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            color: var(--text-primary);
+            border: 1px solid var(--glass-border);
+            padding: 6px 14px;
+            font-size: 10px;
+            border-radius: 50px;
+            cursor: pointer;
             transition: all 0.3s ease;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            box-shadow: 0 4px 15px var(--glass-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            align-self: center;
         }
 
-        .stat-item:hover {
-            background: rgba(255, 255, 255, 0.12);
+        .view-details-btn span:first-child {
+            font-size: 12px;
+        }
+
+        .view-details-btn:hover {
+            background: var(--btn-hover-bg);
             transform: translateY(-2px);
+            box-shadow: 0 6px 20px var(--glass-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.2);
         }
 
-        .stat-icon {
-            font-size: 14px;
+        .dialog-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--dialog-overlay-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            padding: 20px;
+            animation: fadeInOverlay 0.3s ease;
+            overflow-y: auto;
         }
 
-        .app-features {
+        .dialog-overlay.active {
+            display: flex;
+        }
+
+        @keyframes fadeInOverlay {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .dialog-content {
+            background: var(--card-bg);
+            backdrop-filter: blur(50px);
+            -webkit-backdrop-filter: blur(50px);
+            border-radius: 24px;
+            padding: 30px 25px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 
+                0 20px 80px var(--glass-shadow),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+            max-width: 650px;
+            width: 100%;
+            position: relative;
+            animation: slideUpDialog 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            margin: auto;
+        }
+
+        @keyframes slideUpDialog {
+            from {
+                opacity: 0;
+                transform: translateY(50px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .dialog-close {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 20px;
+            color: var(--text-secondary);
+            box-shadow: 0 4px 15px var(--glass-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .dialog-close:hover {
+            background: var(--card-hover-bg);
+            transform: rotate(90deg);
+            color: var(--text-primary);
+            box-shadow: 0 6px 20px var(--glass-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .dialog-header {
+            text-align: center;
             margin-bottom: 20px;
         }
 
-        .features-header {
+        .dialog-icon {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 15px;
+            background: linear-gradient(135deg, var(--accent-color), #8b5cf6);
+            border-radius: 18px;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            cursor: default;
-            padding: 14px 18px;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.05));
-            border-radius: 16px;
-            border: 1px solid var(--border-color);
-            transition: all 0.3s ease;
-            margin-bottom: 15px;
+            justify-content: center;
+            font-size: 36px;
+            box-shadow: 0 12px 35px rgba(59, 130, 246, 0.5);
         }
 
-        @media (max-width: 768px) {
-            .features-header {
-                cursor: pointer;
-            }
-            
-            .features-header:hover {
-                background: rgba(255, 255, 255, 0.08);
-            }
+        .dialog-name {
+            color: var(--text-primary);
+            font-size: 22px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            letter-spacing: 0.3px;
+        }
+
+        .dialog-description {
+            color: var(--text-secondary);
+            font-size: 13px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .dialog-features {
+            margin-bottom: 20px;
         }
 
         .features-title {
             color: var(--text-primary);
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .features-toggle {
-            color: var(--text-secondary);
-            font-size: 18px;
-            transition: transform 0.3s ease;
-            display: none;
-        }
-
-        .features-toggle.active {
-            transform: rotate(180deg);
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            text-align: center;
         }
 
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            list-style: none;
-            max-height: 1000px;
-            overflow: hidden;
-            transition: max-height 0.4s ease, opacity 0.3s ease;
-            opacity: 1;
-        }
-
-        @media (max-width: 768px) {
-            .features-grid.collapsed {
-                max-height: 0;
-                opacity: 0;
-                margin-bottom: 0;
-            }
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
         }
 
         .feature-item {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.05));
-            backdrop-filter: blur(10px);
-            padding: 15px 18px;
-            border-radius: 16px;
-            border: 1px solid var(--border-color);
+            background: var(--card-bg);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            padding: 10px 6px;
+            border-radius: 10px;
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
+            text-align: center;
             display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            text-align: right;
-            cursor: default;
-            position: relative;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            box-shadow: 0 4px 15px var(--glass-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.05);
         }
 
         .feature-item:hover {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.1));
-            transform: translateX(-5px) scale(1.02);
-            box-shadow: 0 6px 20px var(--shadow-color);
-            border-color: rgba(148, 163, 184, 0.3);
+            background: var(--card-hover-bg);
+            transform: translateY(-3px);
+            border-color: var(--accent-color);
+            box-shadow: 0 6px 18px var(--glass-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.1);
         }
 
         .feature-icon {
             color: var(--accent-color);
             font-size: 18px;
-            flex-shrink: 0;
-            margin-top: 2px;
-            filter: drop-shadow(0 2px 4px rgba(59, 130, 246, 0.3));
-        }
-
-        .feature-content {
-            flex: 1;
         }
 
         .feature-text {
-            color: var(--text-secondary);
-            font-size: 13px;
-            line-height: 1.5;
-            font-weight: 700;
-        }
-
-        .feature-item:hover .feature-text {
             color: var(--text-primary);
-        }
-
-        .feature-description {
-            color: var(--text-secondary);
-            font-size: 12px;
-            line-height: 1.6;
-            margin-top: 8px;
-            padding-top: 8px;
-            border-top: 1px solid var(--border-color);
-            opacity: 0.85;
+            font-size: 10px;
+            font-weight: 700;
+            line-height: 1.2;
         }
 
         .download-btn {
-            background: linear-gradient(135deg, var(--btn-bg), rgba(59, 130, 246, 0.15));
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            background: var(--btn-bg);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
             color: var(--text-primary);
-            border: 1px solid var(--border-color);
-            padding: 15px 35px;
-            font-size: clamp(15px, 2vw, 17px);
+            border: 1px solid var(--glass-border);
+            padding: 12px 35px;
+            font-size: 14px;
             border-radius: 50px;
             cursor: pointer;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             font-weight: 800;
-            letter-spacing: 0.5px;
-            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3),
-                        0 10px 35px var(--shadow-color);
+            letter-spacing: 0.3px;
+            box-shadow: 0 8px 25px var(--glass-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.1);
             width: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .download-btn:hover {
-            background: linear-gradient(135deg, var(--btn-hover-bg), rgba(59, 130, 246, 0.3));
+            background: var(--btn-hover-bg);
             transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.5),
-                        0 15px 45px var(--shadow-color);
-            border-color: rgba(59, 130, 246, 0.5);
+            box-shadow: 0 10px 30px var(--glass-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.2);
         }
 
         .download-btn:active {
@@ -476,110 +634,79 @@
 
         .footer {
             text-align: center;
-            margin-top: 80px;
-            margin-bottom: 0;
-            padding-top: 35px;
-            padding-bottom: 35px;
+            padding: 10px;
             border-top: 1px solid var(--border-color);
             color: var(--text-secondary);
-            font-size: 15px;
+            font-size: 11px;
             font-weight: 500;
-            background: var(--bg-gradient-start);
-            margin-left: -20px;
-            margin-right: -20px;
-            padding-left: 20px;
-            padding-right: 20px;
-        }
-
-        @media (max-width: 1024px) {
-            .apps-grid:has(.app-card:nth-child(3)) .app-card {
-                width: calc(50% - 15px);
-            }
+            background: var(--card-bg);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            flex-shrink: 0;
+            margin-top: 8px;
         }
 
         @media (max-width: 768px) {
-            .theme-toggle {
-                top: 10px;
-                left: 10px;
-                padding: 10px 16px;
-                font-size: 14px;
-            }
-
-            .container {
-                padding: 30px 15px;
-            }
-
-            .header {
-                margin-bottom: 40px;
-            }
-
-            .apps-grid {
-                gap: 20px;
-            }
-
-            .apps-grid .app-card {
-                width: calc(50% - 10px) !important;
-                min-width: unset !important;
-            }
-
-            /* المميزات قابلة للطي على الهاتف */
-            .features-toggle {
-                display: block;
-            }
-
-            .features-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 10px;
-            }
-
-            .features-grid.collapsed {
-                display: none;
-            }
-
-            .feature-item {
-                padding: 12px 14px;
-            }
-
-            .feature-text {
-                font-size: 12px;
-            }
-            
-            .feature-icon {
-                font-size: 16px;
-            }
-            
-            .footer {
-                margin-left: -15px;
-                margin-right: -15px;
-                padding-left: 15px;
-                padding-right: 15px;
-            }
+            .controls-container { top: 10px; right: 10px; }
+            .theme-toggle, .view-toggle { width: 52px; height: 26px; }
+            .theme-slider, .view-slider { width: 20px; height: 20px; font-size: 11px; }
+            .container { padding: 15px; }
+            .header { margin-bottom: 20px; }
+            .brand-name { font-size: 24px; }
+            .brand-icon { font-size: 28px; }
+            .brand-subtitle { font-size: 12px; }
+            .apps-grid { gap: 15px; }
+            .app-card { padding: 18px 15px; }
+            .app-icon { width: 55px; height: 55px; font-size: 28px; }
+            .app-name { font-size: 15px; }
+            .app-description { font-size: 11px; }
+            .dialog-content { padding: 25px 20px; }
+            .dialog-close { width: 28px; height: 28px; font-size: 18px; }
+            .dialog-icon { width: 60px; height: 60px; font-size: 30px; }
+            .dialog-name { font-size: 18px; }
+            .dialog-description { font-size: 12px; }
+            .features-grid { grid-template-columns: repeat(2, 1fr); }
+            .feature-text { font-size: 9px; }
+            .footer { font-size: 10px; padding: 8px; margin-top: 6px; }
         }
 
-        /* شاشات الهواتف الصغيرة - تصميم عمودي */
-        @media (max-width: 600px) {
-            .apps-grid .app-card {
-                width: 100% !important;
+        @media (max-width: 480px) {
+            .apps-grid:not(.list-view) { 
+                grid-template-columns: repeat(2, 1fr); 
+                max-width: 100%;
+                gap: 12px;
             }
-            
-            .features-grid {
-                grid-template-columns: 1fr;
+            .apps-grid.list-view { 
+                grid-template-columns: 1fr; 
+                max-width: 280px; 
             }
-        }
-
-        /* Z Fold مفتوح وأجهزة مماثلة (600px - 768px) */
-        @media (min-width: 601px) and (max-width: 768px) {
-            .features-grid {
-                grid-template-columns: 1fr 1fr;
-            }
+            .apps-grid.list-view .app-card { flex-direction: column; text-align: center; }
+            .apps-grid.list-view .app-icon { margin-left: 0; margin-bottom: 12px; }
+            .apps-grid.list-view .app-content { align-items: center; }
+            .apps-grid.list-view .app-description { text-align: center; }
+            .apps-grid.list-view .view-details-btn { align-self: center; }
+            .apps-grid:not(.list-view) .app-card { padding: 15px 12px; }
+            .apps-grid:not(.list-view) .app-icon { width: 50px; height: 50px; font-size: 26px; }
+            .apps-grid:not(.list-view) .app-name { font-size: 14px; }
+            .apps-grid:not(.list-view) .app-description { font-size: 10px; }
         }
     </style>
 </head>
 <body>
-    <button class="theme-toggle" onclick="toggleTheme()">
-        <span id="theme-icon">🌙</span>
-        <span id="theme-text">الوضع الفاتح</span>
-    </button>
+    <div class="controls-container">
+        <div class="theme-toggle" onclick="toggleTheme()">
+            <div class="theme-slider" id="theme-slider">
+                <span id="theme-icon">☀️</span>
+            </div>
+        </div>
+        
+        <div class="view-toggle" onclick="toggleView()">
+            <div class="view-slider" id="view-slider">
+                <span id="view-icon">⊞</span>
+            </div>
+        </div>
+    </div>
 
     <div class="container">
         <div class="header">
@@ -590,154 +717,138 @@
             <div class="brand-subtitle">تطبيقات احترافية لتجربة مميزة</div>
         </div>
 
-        <div class="apps-grid">
-            <!-- تطبيق الأذكار -->
-            <div class="app-card">
+        <div class="apps-grid" id="apps-grid">
+            <div class="app-card" onclick="openDialog('azkari')">
                 <div class="app-icon">📿</div>
-                <div class="app-name">أذكاري</div>
-                <div class="app-description">
-                    رفيقك اليومي للأذكار والأدعية مع إمكانية التخصيص الكامل
+                <div class="app-content">
+                    <div class="app-name">أذكاري</div>
+                    <div class="app-description">رفيقك اليومي للأذكار والأدعية مع إمكانية التخصيص الكامل</div>
+                    <button class="view-details-btn" onclick="event.stopPropagation(); openDialog('azkari')">
+                        <span>📋</span>
+                        <span>المزيد من التفاصيل</span>
+                    </button>
                 </div>
-                
-                <div class="app-stats">
-                    <div class="stat-item">
-                        <span class="app-version">الإصدار 1.0</span>
-                        <span class="stat-icon">📦</span>
-                        <span>172.7 MB</span>
-                        <span class="stat-icon">📱</span>
-                        <span>Android 5.0+</span>
-                    </div>
-                    
-                </div>
-
-                <div class="app-features">
-                    <div class="features-header" onclick="toggleFeatures(this)">
-                        <div class="features-title">المميزات الرئيسية</div>
-                        <div class="features-toggle">▼</div>
-                    </div>
-                    <div class="features-grid collapsed">
-                        <div class="feature-item">
-                            <span class="feature-icon">📚</span>
-                            <div class="feature-content">
-                                <div class="feature-text">مكتبة شاملة للأذكار</div>
-                                <div class="feature-description">أذكار الصباح والمساء والمزيد</div>
-                            </div>
-                        </div>
-                        <div class="feature-item">
-                            <span class="feature-icon">🎨</span>
-                            <div class="feature-content">
-                                <div class="feature-text">تخصيص كامل للثيمات</div>
-                                <div class="feature-description">ثيمات جاهزة وتخصيص احترافي</div>
-                            </div>
-                        </div>
-                        <div class="feature-item">
-                            <span class="feature-icon">🔢</span>
-                            <div class="feature-content">
-                                <div class="feature-text">عداد ذكي ومرن</div>
-                                <div class="feature-description">عد بطرق متعددة ومرنة</div>
-                            </div>
-                        </div>
-                        <div class="feature-item">
-                            <span class="feature-icon">✏️</span>
-                            <div class="feature-content">
-                                <div class="feature-text">أذكار ومذكرات مخصصة</div>
-                                <div class="feature-description">أضف أذكارك الشخصية بحرية</div>
-                            </div>
-                        </div>
-                        <div class="feature-item">
-                            <span class="feature-icon">📱</span>
-                            <div class="feature-content">
-                                <div class="feature-text">تجربة استخدام سلسة</div>
-                                <div class="feature-description">واجهة سهلة ومريحة</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <button class="download-btn" onclick="downloadApp('https://github.com/BinAref/My-Apps/releases/download/v1.0/Azkari.apk')">
-                    <span>⬇</span>
-                    <span>تحميل التطبيق</span>
-                </button>
             </div>
 
-            <!-- تطبيق إدارة المحتوى -->
-            <div class="app-card">
+            <div class="app-card" onclick="openDialog('ministry')">
                 <div class="app-icon">📱</div>
-                <div class="app-name">إدارة المحتوى</div>
-                <div class="app-description">
-                    منصة متكاملة لإدارة ونشر المحتوى الرقمي بجميع أنواعه
+                <div class="app-content">
+                    <div class="app-name">إدارة المحتوى</div>
+                    <div class="app-description">منصة متكاملة لإدارة ونشر المحتوى الرقمي بجميع أنواعه</div>
+                    <button class="view-details-btn" onclick="event.stopPropagation(); openDialog('ministry')">
+                        <span>📋</span>
+                        <span>المزيد من التفاصيل</span>
+                    </button>
                 </div>
-
-                <div class="app-stats">
-                    <div class="stat-item">
-                        <span class="app-version">الإصدار 1.0</span>
-                        <span class="stat-icon">📦</span>
-                        <span>89.92 MB</span>
-                        <span class="stat-icon">📱</span>
-                        <span>Android 5.0+</span>
-                        
-                    </div>
-                    
-                </div>
-
-                <div class="app-features">
-                    <div class="features-header" onclick="toggleFeatures(this)">
-                        <div class="features-title">المميزات الرئيسية</div>
-                        <div class="features-toggle">▼</div>
-                    </div>
-                    <div class="features-grid collapsed">
-                        <div class="feature-item">
-                            <span class="feature-icon">📝</span>
-                            <div class="feature-content">
-                                <div class="feature-text">المنشورات التفاعلية</div>
-                                <div class="feature-description">محتوى متنوع بتفاعل متقدم</div>
-                            </div>
-                        </div>
-                        <div class="feature-item">
-                            <span class="feature-icon">📖</span>
-                            <div class="feature-content">
-                                <div class="feature-text">مكتبة الكتب الرقمية</div>
-                                <div class="feature-description">مكتبة منظمة بإحصائيات شاملة</div>
-                            </div>
-                        </div>
-                        <div class="feature-item">
-                            <span class="feature-icon">🎬</span>
-                            <div class="feature-content">
-                                <div class="feature-text">مشغل الفيديوهات المتطور</div>
-                                <div class="feature-description">مشاهدة احترافية بتصميمين</div>
-                            </div>
-                        </div>
-                        <div class="feature-item">
-                            <span class="feature-icon">🎵</span>
-                            <div class="feature-content">
-                                <div class="feature-text">مشغل الصوتيات الذكي</div>
-                                <div class="feature-description">استماع ذكي بميزات فريدة</div>
-                            </div>
-                        </div>
-                        <div class="feature-item">
-                            <span class="feature-icon">👨‍💼</span>
-                            <div class="feature-content">
-                                <div class="feature-text">لوحة تحكم المدير</div>
-                                <div class="feature-description">إدارة كاملة بإحصائيات متقدمة</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <button class="download-btn" onclick="downloadApp('https://github.com/BinAref/My-Apps/releases/download/v1.0/Minstiry.apk')">
-                    <span>⬇</span>
-                    <span>تحميل التطبيق</span>
-                </button>
             </div>
         </div>
+    </div>
 
-        <div class="footer">
-            <p>جميع الحقوق محفوظة © 2025 BinAref</p>
+    <div class="footer">
+        <p>جميع الحقوق محفوظة © 2025 BinAref</p>
+    </div>
+
+    <div class="dialog-overlay" id="dialog-azkari" onclick="closeDialogOnOverlay(event, 'azkari')">
+        <div class="dialog-content" onclick="event.stopPropagation()">
+            <div class="dialog-close" onclick="closeDialog('azkari')">×</div>
+            
+            <div class="dialog-header">
+                <div class="dialog-icon">📿</div>
+                <div class="dialog-name">أذكاري</div>
+                <div class="dialog-description">
+                    رفيقك اليومي للأذكار والأدعية مع إمكانية التخصيص الكامل
+                </div>
+            </div>
+
+            <div class="dialog-features">
+                <div class="features-title">المميزات الرئيسية</div>
+                <div class="features-grid">
+                    <div class="feature-item">
+                        <span class="feature-icon">📚</span>
+                        <div class="feature-text">مكتبة شاملة للأذكار</div>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">🎨</span>
+                        <div class="feature-text">تخصيص كامل للثيمات</div>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">🔢</span>
+                        <div class="feature-text">عداد ذكي ومرن</div>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">✏️</span>
+                        <div class="feature-text">أذكار ومذكرات مخصصة</div>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">📱</span>
+                        <div class="feature-text">تجربة استخدام سلسة</div>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">⭐</span>
+                        <div class="feature-text">أذكارك المفضلة</div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="download-btn" onclick="downloadApp('https://github.com/BinAref/My-Apps/releases/download/v1.0/Azkari.apk')">
+                <span>⬇</span>
+                <span>تحميل التطبيق</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="dialog-overlay" id="dialog-ministry" onclick="closeDialogOnOverlay(event, 'ministry')">
+        <div class="dialog-content" onclick="event.stopPropagation()">
+            <div class="dialog-close" onclick="closeDialog('ministry')">×</div>
+            
+            <div class="dialog-header">
+                <div class="dialog-icon">📱</div>
+                <div class="dialog-name">إدارة المحتوى</div>
+                <div class="dialog-description">
+                    منصة متكاملة لإدارة ونشر المحتوى الرقمي بجميع أنواعه
+                </div>
+            </div>
+
+            <div class="dialog-features">
+                <div class="features-title">المميزات الرئيسية</div>
+                <div class="features-grid">
+                    <div class="feature-item">
+                        <span class="feature-icon">📝</span>
+                        <div class="feature-text">المنشورات التفاعلية</div>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">📖</span>
+                        <div class="feature-text">مكتبة الكتب الرقمية</div>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">🎬</span>
+                        <div class="feature-text">مشغل الفيديوهات المتطور</div>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">🎵</span>
+                        <div class="feature-text">مشغل الصوتيات الذكي</div>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">👨‍💼</span>
+                        <div class="feature-text">لوحة تحكم المدير</div>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">📊</span>
+                        <div class="feature-text">إحصائيات متقدمة</div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="download-btn" onclick="downloadApp('https://github.com/BinAref/My-Apps/releases/download/v1.0/Minstiry.apk')">
+                <span>⬇</span>
+                <span>تحميل التطبيق</span>
+            </button>
         </div>
     </div>
 
     <script>
-        // نظام الثيم
+        let isListView = false;
+
         function toggleTheme() {
             const html = document.documentElement;
             const currentTheme = html.getAttribute('data-theme');
@@ -751,38 +862,92 @@
 
         function updateThemeButton(theme) {
             const icon = document.getElementById('theme-icon');
-            const text = document.getElementById('theme-text');
             
             if (theme === 'light') {
                 icon.textContent = '🌙';
-                text.textContent = 'الوضع الداكن';
             } else {
                 icon.textContent = '☀️';
-                text.textContent = 'الوضع الفاتح';
             }
         }
 
-        // تحميل الثيم المحفوظ (الافتراضي: داكن)
+        function toggleView() {
+            isListView = !isListView;
+            const grid = document.getElementById('apps-grid');
+            const slider = document.getElementById('view-slider');
+            const icon = document.getElementById('view-icon');
+            
+            if (isListView) {
+                grid.classList.add('list-view');
+                slider.classList.add('list-active');
+                icon.textContent = '☰';
+            } else {
+                grid.classList.remove('list-view');
+                slider.classList.remove('list-active');
+                icon.textContent = '⊞';
+            }
+            
+            localStorage.setItem('viewMode', isListView ? 'list' : 'grid');
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
-            const savedTheme = localStorage.getItem('theme') || 'dark';
+            // الحصول على الثيم المحفوظ أو ثيم النظام
+            let savedTheme = localStorage.getItem('theme');
+            
+            if (!savedTheme) {
+                // إذا لم يكن هناك ثيم محفوظ، استخدم ثيم النظام
+                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                savedTheme = prefersDark ? 'dark' : 'light';
+            }
+            
             document.documentElement.setAttribute('data-theme', savedTheme);
             updateThemeButton(savedTheme);
+
+            // الاستماع لتغييرات ثيم النظام
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+                // فقط إذا لم يكن المستخدم قد اختار ثيم يدوياً
+                if (!localStorage.getItem('theme')) {
+                    const newTheme = e.matches ? 'dark' : 'light';
+                    document.documentElement.setAttribute('data-theme', newTheme);
+                    updateThemeButton(newTheme);
+                }
+            });
+
+            const savedView = localStorage.getItem('viewMode');
+            if (savedView === 'list') {
+                toggleView();
+            }
         });
 
-        // دالة التحميل
-        function downloadApp(githubUrl) {
-            window.location.href = githubUrl;
+        function openDialog(appName) {
+            const dialog = document.getElementById('dialog-' + appName);
+            dialog.classList.add('active');
+            document.body.style.overflow = 'hidden';
         }
 
-        // نظام طي وفتح المميزات (للهاتف فقط)
-        function toggleFeatures(header) {
-            if (window.innerWidth <= 768) {
-                const grid = header.nextElementSibling;
-                const toggle = header.querySelector('.features-toggle');
-                
-                grid.classList.toggle('collapsed');
-                toggle.classList.toggle('active');
+        function closeDialog(appName) {
+            const dialog = document.getElementById('dialog-' + appName);
+            dialog.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function closeDialogOnOverlay(event, appName) {
+            if (event.target.classList.contains('dialog-overlay')) {
+                closeDialog(appName);
             }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                const activeDialog = document.querySelector('.dialog-overlay.active');
+                if (activeDialog) {
+                    activeDialog.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                }
+            }
+        });
+
+        function downloadApp(githubUrl) {
+            window.location.href = githubUrl;
         }
     </script>
 </body>
