@@ -257,6 +257,60 @@
             max-width: 450px;
         }
 
+        /* شاشات كبيرة جداً - 4K وأكبر */
+        @media (min-width: 2560px) {
+            .container { max-width: 1800px; }
+            .apps-grid:not(.list-view) { 
+                max-width: 900px; 
+                gap: 30px;
+            }
+            .brand-name { font-size: 48px; }
+            .brand-icon { font-size: 52px; }
+            .brand-subtitle { font-size: 20px; }
+            .app-card { padding: 30px 25px; }
+            .app-icon { width: 90px; height: 90px; font-size: 44px; }
+            .app-name { font-size: 22px; }
+            .app-description { font-size: 16px; }
+            .view-details-btn { padding: 10px 22px; font-size: 14px; }
+        }
+
+        /* شاشات كبيرة - Desktop كبير */
+        @media (min-width: 1920px) and (max-width: 2559px) {
+            .container { max-width: 1600px; }
+            .apps-grid:not(.list-view) { 
+                max-width: 750px; 
+                gap: 25px;
+            }
+            .brand-name { font-size: 42px; }
+            .brand-icon { font-size: 46px; }
+            .brand-subtitle { font-size: 18px; }
+            .app-card { padding: 26px 22px; }
+            .app-icon { width: 80px; height: 80px; font-size: 38px; }
+            .app-name { font-size: 20px; }
+            .app-description { font-size: 15px; }
+        }
+
+        /* شاشات متوسطة إلى كبيرة - Desktop عادي */
+        @media (min-width: 1280px) and (max-width: 1919px) {
+            .apps-grid:not(.list-view) { 
+                max-width: 650px; 
+                gap: 22px;
+            }
+            .brand-name { font-size: 38px; }
+            .brand-icon { font-size: 42px; }
+            .brand-subtitle { font-size: 16px; }
+        }
+
+        /* التابلت الأفقي */
+        @media (min-width: 769px) and (max-width: 1279px) {
+            .apps-grid:not(.list-view) { 
+                max-width: 580px;
+                gap: 18px;
+            }
+            .brand-name { font-size: 34px; }
+            .brand-icon { font-size: 38px; }
+        }
+
         .app-card {
             background: var(--card-bg);
             backdrop-filter: blur(40px);
@@ -647,7 +701,37 @@
             margin-top: 8px;
         }
 
-        @media (max-width: 768px) {
+        /* التابلت العمودي والموبايل الكبير */
+        @media (min-width: 481px) and (max-width: 768px) {
+            .apps-grid {
+                grid-template-columns: 1fr !important;
+                max-width: 400px !important;
+            }
+            .apps-grid .app-card { 
+                flex-direction: row !important;
+                text-align: right !important;
+                padding: 18px !important;
+            }
+            .apps-grid .app-icon { 
+                margin-bottom: 0 !important;
+                margin-left: 18px !important;
+                flex-shrink: 0 !important;
+            }
+            .apps-grid .app-content { 
+                flex: 1 !important;
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: flex-start !important;
+            }
+            .apps-grid .app-description { 
+                text-align: right !important;
+            }
+            .apps-grid .view-details-btn { 
+                align-self: flex-start !important;
+            }
+            .apps-grid .app-card:hover {
+                transform: translateX(-8px) scale(1.01) !important;
+            }
             .controls-container { top: 10px; right: 10px; }
             .theme-toggle, .view-toggle { width: 52px; height: 26px; }
             .theme-slider, .view-slider { width: 20px; height: 20px; font-size: 11px; }
@@ -656,8 +740,6 @@
             .brand-name { font-size: 24px; }
             .brand-icon { font-size: 28px; }
             .brand-subtitle { font-size: 12px; }
-            .apps-grid { gap: 15px; }
-            .app-card { padding: 18px 15px; }
             .app-icon { width: 55px; height: 55px; font-size: 28px; }
             .app-name { font-size: 15px; }
             .app-description { font-size: 11px; }
@@ -671,25 +753,58 @@
             .footer { font-size: 10px; padding: 8px; margin-top: 6px; }
         }
 
+        /* الموبايل الصغير والساعات الذكية */
         @media (max-width: 480px) {
             .apps-grid:not(.list-view) { 
-                grid-template-columns: repeat(2, 1fr); 
-                max-width: 100%;
+                grid-template-columns: repeat(2, 1fr) !important; 
+                max-width: 100% !important;
                 gap: 12px;
             }
             .apps-grid.list-view { 
-                grid-template-columns: 1fr; 
-                max-width: 280px; 
+                grid-template-columns: 1fr !important; 
+                max-width: 280px !important; 
             }
-            .apps-grid.list-view .app-card { flex-direction: column; text-align: center; }
-            .apps-grid.list-view .app-icon { margin-left: 0; margin-bottom: 12px; }
-            .apps-grid.list-view .app-content { align-items: center; }
-            .apps-grid.list-view .app-description { text-align: center; }
-            .apps-grid.list-view .view-details-btn { align-self: center; }
+            .apps-grid.list-view .app-card { 
+                flex-direction: column !important; 
+                text-align: center !important; 
+            }
+            .apps-grid.list-view .app-icon { 
+                margin-left: 0 !important; 
+                margin-bottom: 12px !important; 
+            }
+            .apps-grid.list-view .app-content { 
+                align-items: center !important; 
+            }
+            .apps-grid.list-view .app-description { 
+                text-align: center !important; 
+            }
+            .apps-grid.list-view .view-details-btn { 
+                align-self: center !important; 
+            }
             .apps-grid:not(.list-view) .app-card { padding: 15px 12px; }
             .apps-grid:not(.list-view) .app-icon { width: 50px; height: 50px; font-size: 26px; }
             .apps-grid:not(.list-view) .app-name { font-size: 14px; }
             .apps-grid:not(.list-view) .app-description { font-size: 10px; }
+        }
+
+        /* الساعات الذكية الصغيرة جداً */
+        @media (max-width: 320px) {
+            .controls-container { top: 8px; right: 8px; gap: 6px; }
+            .theme-toggle, .view-toggle { width: 45px; height: 22px; }
+            .theme-slider, .view-slider { width: 16px; height: 16px; font-size: 9px; }
+            .container { padding: 10px; }
+            .brand-name { font-size: 18px; }
+            .brand-icon { font-size: 20px; }
+            .brand-subtitle { font-size: 10px; }
+            .header { margin-bottom: 15px; }
+            .apps-grid:not(.list-view) { gap: 8px; }
+            .apps-grid:not(.list-view) .app-card { padding: 12px 8px; }
+            .apps-grid:not(.list-view) .app-icon { width: 40px; height: 40px; font-size: 20px; }
+            .apps-grid:not(.list-view) .app-name { font-size: 12px; }
+            .apps-grid:not(.list-view) .app-description { font-size: 9px; }
+            .view-details-btn { padding: 4px 10px; font-size: 8px; }
+            .view-details-btn span:first-child { font-size: 10px; }
+            .footer { font-size: 8px; padding: 6px; }
         }
     </style>
 </head>
@@ -848,6 +963,32 @@
 
     <script>
         let isListView = false;
+        let manualOverride = false; // لتتبع إذا كان المستخدم غيّر يدوياً
+
+        function getAutoViewMode() {
+            const width = window.innerWidth;
+            // تلقائياً: قائمة للتابلت العمودي وأصغر (481-768px)
+            // شبكي للشاشات الكبيرة والموبايل الصغير
+            return (width >= 481 && width <= 768) ? 'list' : 'grid';
+        }
+
+        function applyViewMode(mode) {
+            const grid = document.getElementById('apps-grid');
+            const slider = document.getElementById('view-slider');
+            const icon = document.getElementById('view-icon');
+            
+            isListView = (mode === 'list');
+            
+            if (isListView) {
+                grid.classList.add('list-view');
+                slider.classList.add('list-active');
+                icon.textContent = '☰';
+            } else {
+                grid.classList.remove('list-view');
+                slider.classList.remove('list-active');
+                icon.textContent = '⊞';
+            }
+        }
 
         function toggleTheme() {
             const html = document.documentElement;
@@ -871,30 +1012,31 @@
         }
 
         function toggleView() {
+            manualOverride = true; // المستخدم غيّر يدوياً
             isListView = !isListView;
-            const grid = document.getElementById('apps-grid');
-            const slider = document.getElementById('view-slider');
-            const icon = document.getElementById('view-icon');
-            
-            if (isListView) {
-                grid.classList.add('list-view');
-                slider.classList.add('list-active');
-                icon.textContent = '☰';
-            } else {
-                grid.classList.remove('list-view');
-                slider.classList.remove('list-active');
-                icon.textContent = '⊞';
-            }
-            
-            localStorage.setItem('viewMode', isListView ? 'list' : 'grid');
+            const mode = isListView ? 'list' : 'grid';
+            applyViewMode(mode);
+            sessionStorage.setItem('manualViewMode', mode); // حفظ في الجلسة فقط
         }
+
+        // الاستماع لتغيير حجم الشاشة
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                // إذا لم يكن هناك تغيير يدوي في هذه الجلسة
+                if (!manualOverride) {
+                    const autoMode = getAutoViewMode();
+                    applyViewMode(autoMode);
+                }
+            }, 250);
+        });
 
         document.addEventListener('DOMContentLoaded', () => {
             // الحصول على الثيم المحفوظ أو ثيم النظام
             let savedTheme = localStorage.getItem('theme');
             
             if (!savedTheme) {
-                // إذا لم يكن هناك ثيم محفوظ، استخدم ثيم النظام
                 const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
                 savedTheme = prefersDark ? 'dark' : 'light';
             }
@@ -904,7 +1046,6 @@
 
             // الاستماع لتغييرات ثيم النظام
             window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-                // فقط إذا لم يكن المستخدم قد اختار ثيم يدوياً
                 if (!localStorage.getItem('theme')) {
                     const newTheme = e.matches ? 'dark' : 'light';
                     document.documentElement.setAttribute('data-theme', newTheme);
@@ -912,9 +1053,15 @@
                 }
             });
 
-            const savedView = localStorage.getItem('viewMode');
-            if (savedView === 'list') {
-                toggleView();
+            // التحقق من وجود تغيير يدوي في هذه الجلسة
+            const manualMode = sessionStorage.getItem('manualViewMode');
+            if (manualMode) {
+                manualOverride = true;
+                applyViewMode(manualMode);
+            } else {
+                // تطبيق الوضع التلقائي حسب حجم الشاشة
+                const autoMode = getAutoViewMode();
+                applyViewMode(autoMode);
             }
         });
 
