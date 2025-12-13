@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; connect-src 'self' https://ugmallekycxnzejydafw.supabase.co https://*.supabase.co; img-src 'self' data: https:;">
     <title>BinAref - التطبيقات</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
     <style>
         /* ==========================================
            الجزء 1: إعادة تعيين أساسية والمتغيرات
@@ -1337,7 +1337,26 @@
         // ==========================================
         const SUPABASE_URL = 'https://ugmallekycxnzejydafw.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVnbWFsbGVreWN4bnplanlkYWZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU2NTI1MjEsImV4cCI6MjA4MTIyODUyMX0.ITtbUhlsFM9y_v8e6ymSluGcqExzZq13Npz97z2KzLw';
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        // دوال مساعدة للاتصال بـ Supabase
+async function supabaseQuery(table, options = {}) {
+    const url = `${SUPABASE_URL}/rest/v1/${table}${options.query || ''}`;
+    const response = await fetch(url, {
+        method: options.method || 'GET',
+        headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${SUPABASE_KEY}`,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=representation'
+        },
+        body: options.body ? JSON.stringify(options.body) : undefined
+    });
+    
+    if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    return await response.json();
+}
 
         let appsData = [];
         const featuresMap = {
@@ -1371,21 +1390,29 @@
         //  تحميل التطبيقات من Supabase
         // ==========================================
         async function loadApps() {
-            try {
-                const { data, error } = await supabase
-                    .from('apps')
-                    .select('*');
+    try {
+        console.log('🔄 جاري تحميل التطبيقات...');
+        
+        const data = await supabaseQuery('apps', {
+            query: '?select=*'
+        });
 
-                if (error) throw error;
+        console.log('✅ تم تحميل', data.length, 'تطبيقات:', data);
 
-                appsData = data;
-                renderApps();
-                renderDialogs();
-            } catch (error) {
-                console.error('خطأ في تحميل التطبيقات:', error);
-                alert('⚠️ خطأ في تحميل البيانات. يرجى المحاولة لاحقاً.');
-            }
+        if (!data || data.length === 0) {
+            console.warn('⚠️ لا توجد بيانات');
+            alert('⚠️ لا توجد تطبيقات في قاعدة البيانات!\n\nيرجى:\n1. تنفيذ SQL Scripts في Supabase\n2. إيقاف Row Level Security');
+            return;
         }
+
+        appsData = data;
+        renderApps();
+        renderDialogs();
+    } catch (error) {
+        console.error('❌ خطأ في تحميل التطبيقات:', error);
+        alert('⚠️ خطأ في تحميل البيانات:\n' + error.message + '\n\nتأكد من:\n1. Row Level Security معطل\n2. البيانات موجودة في جدول apps');
+    }
+}
 
         // ==========================================
         //  عرض التطبيقات
@@ -1456,30 +1483,30 @@
 
             try {
                 // التحقق من كلمة السر
-                const { data: passwords, error: fetchError } = await supabase
-                    .from('passwords')
-                    .select('*')
-                    .eq('app_id', appId)
-                    .eq('password_key', password.trim())
-                    .eq('used', false);
+                // التحقق من كلمة السر
+const passwords = await supabaseQuery('passwords', {
+    query: `?app_id=eq.${appId}&password_key=eq.${password.trim()}&used=eq.false&select=*`
+});
 
-                if (fetchError) throw fetchError;
+console.log('🔍 نتيجة البحث:', passwords);
 
-                if (!passwords || passwords.length === 0) {
-                    alert('❌ كلمة سر غير صحيحة أو مستخدمة مسبقاً');
-                    btn.disabled = false;
-                    btn.innerHTML = '<span>⬇</span> <span>تحميل التطبيق</span>';
-                    return;
-                }
+if (!passwords || passwords.length === 0) {
+    alert('❌ كلمة سر غير صحيحة أو مستخدمة مسبقاً');
+    btn.disabled = false;
+    btn.innerHTML = '<span>⬇</span> <span>تحميل التطبيق</span>';
+    return;
+}
 
-                // تحديث حالة كلمة السر
-                const passwordId = passwords[0].id;
-                const { error: updateError } = await supabase
-                    .from('passwords')
-                    .update({ used: true, used_at: new Date().toISOString() })
-                    .eq('id', passwordId);
-
-                if (updateError) throw updateError;
+// تحديث حالة كلمة السر
+const passwordId = passwords[0].id;
+await supabaseQuery('passwords', {
+    method: 'PATCH',
+    query: `?id=eq.${passwordId}`,
+    body: { 
+        used: true, 
+        used_at: new Date().toISOString() 
+    }
+});
 
                 // الحصول على رابط التحميل
                 const app = appsData.find(a => a.app_id === appId);
