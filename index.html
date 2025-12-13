@@ -1455,6 +1455,17 @@
                     </button>
                 </div>
             </div>
+            <div class="app-card" onclick="openDialog('voicelink')">
+    <div class="app-icon">🎙️</div>
+    <div class="app-content">
+        <div class="app-name">VoiceLink</div>
+        <div class="app-description">تطبيق محادثة صوتية شبكية متطور للتواصل المباشر عبر الشبكة المحلية</div>
+        <button class="view-details-btn" onclick="event.stopPropagation(); openDialog('voicelink')">
+            <span>📋</span>
+            <span>التفاصيل</span>
+        </button>
+    </div>
+</div>
         </div>
     </div>
 
@@ -1560,6 +1571,54 @@
         </div>
     </div>
 
+    <div class="dialog-overlay" id="dialog-voicelink" onclick="closeDialogOnOverlay(event, 'voicelink')">
+    <div class="dialog-content" onclick="event.stopPropagation()">
+        <div class="dialog-close" onclick="closeDialog('voicelink')">×</div>
+        
+        <div class="dialog-header">
+            <div class="dialog-icon">🎙️</div>
+            <div class="dialog-name">VoiceLink</div>
+            <div class="dialog-description">
+                تطبيق محادثة صوتية شبكية متطور للتواصل المباشر عبر الشبكة المحلية
+            </div>
+        </div>
+
+        <div class="dialog-features">
+            <div class="features-title">المميزات الرئيسية</div>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <span class="feature-icon">🎵</span>
+                    <div class="feature-text">محادثة صوتية فورية</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">🌐</span>
+                    <div class="feature-text">شبكة محلية ذكية</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">🔐</span>
+                    <div class="feature-text">نظام الأدوار</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">🌍</span>
+                    <div class="feature-text">50 لغة مدعومة</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">⚡</span>
+                    <div class="feature-text">زمن استجابة منخفض</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">📡</span>
+                    <div class="feature-text">اتصال P2P</div>
+                </div>
+            </div>
+        </div>
+
+        <button class="download-btn" onclick="downloadApp('https://github.com/BinAref/My-Apps/releases/download/v1.0/VoiceLink.apk')">
+            <span>⬇</span>
+            <span>تحميل التطبيق</span>
+        </button>
+    </div>
+</div>
     <script>
         let isListView = false;
         let manualOverride = false;
