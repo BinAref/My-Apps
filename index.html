@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BinAref - التطبيقات</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         /* ==========================================
            الجزء 1: إعادة تعيين أساسية والمتغيرات
@@ -66,12 +67,6 @@
             display: flex;
             flex-direction: column;
         }
-
-        /* ========== نهاية الجزء 1 ========== */
-
-/* ==========================================
-           الجزء 2: الخلفية والتأثيرات الحركية
-        ========================================== */
 
         body::before {
             content: '';
@@ -242,18 +237,6 @@
             animation: shootingStarRandom3 4.5s ease-in infinite;
             animation-delay: 9.2s;
             transform: rotate(-25deg);
-        }
-
-        .tech-line::before {
-            content: attr(data-code);
-            position: absolute;
-            color: var(--accent-color);
-            font-family: 'Courier New', monospace;
-            font-size: 12px;
-            font-weight: bold;
-            opacity: 0.7;
-            white-space: nowrap;
-            text-shadow: 0 0 10px var(--accent-color);
         }
 
         @keyframes moveLineRandom1 {
@@ -428,11 +411,8 @@
                 opacity: 0.3;
             }
         }
-
-        /* ========== نهاية الجزء 2 ========== */
-
 /* ==========================================
-           الجزء 3: أزرار الثيمات والتحكم
+           الجزء 2: أزرار التحكم والهيدر
         ========================================== */
 
         .controls-container {
@@ -460,7 +440,7 @@
             pointer-events: auto;
         }
 
-        .theme-toggle {
+        .theme-toggle, .view-toggle {
             background: transparent;
             backdrop-filter: blur(30px);
             -webkit-backdrop-filter: blur(30px);
@@ -481,7 +461,7 @@
             position: relative;
         }
 
-        .theme-toggle::before {
+        .theme-toggle::before, .view-toggle::before {
             content: '';
             position: absolute;
             inset: -2px;
@@ -494,7 +474,7 @@
             pointer-events: none;
         }
 
-        .theme-toggle:hover {
+        .theme-toggle:hover, .view-toggle:hover {
             box-shadow: 
                 0 12px 40px var(--glass-shadow), 
                 0 0 30px rgba(220, 38, 38, 0.4),
@@ -504,7 +484,7 @@
             transform: translateY(-2px);
         }
 
-        .theme-slider {
+        .theme-slider, .view-slider {
             position: absolute;
             width: 20px;
             height: 20px;
@@ -526,74 +506,13 @@
             top: calc(100% - 22px);
         }
 
-        .view-toggle {
-            background: transparent;
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            border-radius: 50px;
-            padding: 2px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 
-                0 8px 32px var(--glass-shadow), 
-                0 0 20px rgba(220, 38, 38, 0.2),
-                0 0 20px rgba(59, 130, 246, 0.2),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 24px;
-            height: 48px;
-            position: relative;
-        }
-
-        .view-toggle::before {
-            content: '';
-            position: absolute;
-            inset: -2px;
-            border-radius: 50px;
-            padding: 2px;
-            background: linear-gradient(180deg, rgba(220, 38, 38, 0.8), rgba(59, 130, 246, 0.8));
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            pointer-events: none;
-        }
-
-        .view-toggle:hover {
-            box-shadow: 
-                0 12px 40px var(--glass-shadow), 
-                0 0 30px rgba(220, 38, 38, 0.4),
-                0 0 30px rgba(59, 130, 246, 0.4),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
-            background: rgba(255, 255, 255, 0.05);
-            transform: translateY(-2px);
-        }
-
         .view-slider {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background: linear-gradient(135deg, var(--accent-color), #8b5cf6);
-            border-radius: 50%;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.5);
             top: 2px;
         }
 
         .view-slider.list-active {
             top: calc(100% - 22px);
         }
-
-        /* ========== نهاية الجزء 3 ========== */
-
-/* ==========================================
-           الجزء 4: الهيدر والعلامة التجارية
-        ========================================== */
 
         .container {
             max-width: 1200px;
@@ -661,7 +580,6 @@
             background-clip: text;
             animation: gradientText 3s ease infinite;
             font-weight: 900;
-            position: relative;
         }
 
         @keyframes gradientText {
@@ -735,10 +653,8 @@
             }
         }
 
-        /* ========== نهاية الجزء 4 ========== */
-
-/* ==========================================
-           الجزء 5: شبكة التطبيقات والكروت (محدّث)
+        /* ==========================================
+           الجزء 3: شبكة التطبيقات والكروت
         ========================================== */
 
         .apps-grid {
@@ -820,15 +736,6 @@
 
         .apps-grid.list-view .view-details-btn {
             align-self: flex-start;
-        }
-
-        /* تم إزالة الحدود المتوهجة المتحركة */
-        .app-card::before {
-            content: none;
-        }
-
-        .app-card::after {
-            content: none;
         }
 
         @keyframes fadeIn {
@@ -925,12 +832,7 @@
             align-items: center;
             justify-content: center;
             gap: 3px;
-            align-self: center;
             white-space: nowrap;
-        }
-
-        .view-details-btn span:first-child {
-            font-size: 10px;
         }
 
         .view-details-btn:hover {
@@ -939,10 +841,21 @@
             box-shadow: 0 6px 20px var(--glass-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.2);
         }
 
-        /* ========== نهاية الجزء 5 ========== */
+        .loading-spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 0.6s linear infinite;
+        }
 
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
 /* ==========================================
-           الجزء 6: الديالوجز (النوافذ المنبثقة)
+           الجزء 4: الديالوجز والنوافذ المنبثقة
         ========================================== */
 
         .dialog-overlay {
@@ -960,7 +873,6 @@
             z-index: 2000;
             padding: 20px;
             animation: fadeInOverlay 0.3s ease;
-            overflow: hidden;
         }
 
         [data-theme="light"] .dialog-overlay {
@@ -994,7 +906,6 @@
             overflow-y: auto;
             position: relative;
             animation: slideUpDialog 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            margin: auto;
         }
 
         [data-theme="light"] .dialog-content {
@@ -1068,7 +979,6 @@
             box-shadow: 
                 0 10px 30px rgba(59, 130, 246, 0.4),
                 inset 0 1px 0 rgba(255, 255, 255, 0.2);
-            position: relative;
         }
 
         .dialog-name {
@@ -1086,10 +996,6 @@
             margin-bottom: 20px;
         }
 
-        .dialog-features {
-            margin-bottom: 20px;
-        }
-
         .features-title {
             color: var(--text-primary);
             font-size: 13px;
@@ -1104,6 +1010,7 @@
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 10px;
+            margin-bottom: 20px;
         }
 
         .feature-item {
@@ -1165,16 +1072,10 @@
             box-shadow: 0 12px 30px rgba(59, 130, 246, 0.6);
         }
 
-        .download-btn span {
-            position: relative;
-            z-index: 1;
+        .download-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
-
-        /* ========== نهاية الجزء 6 ========== */
-
-/* ==========================================
-           الجزء 7: الفوتر والتصميم المتجاوب
-        ========================================== */
 
         .footer {
             text-align: center;
@@ -1192,7 +1093,10 @@
             z-index: 10;
         }
 
-        /* التابلت العمودي والموبايل الكبير */
+        /* ==========================================
+           الجزء 5: التصميم المتجاوب
+        ========================================== */
+
         @media (min-width: 481px) and (max-width: 768px) {
             .apps-grid {
                 grid-template-columns: 1fr !important;
@@ -1231,7 +1135,6 @@
             }
         }
 
-        /* الموبايل الصغير */
         @media (max-width: 480px) {
             .apps-grid:not(.list-view) { 
                 grid-template-columns: repeat(2, 1fr) !important; 
@@ -1265,9 +1168,12 @@
             .apps-grid.list-view .view-details-btn { 
                 align-self: center !important; 
             }
+            
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
-        /* للشاشات الصغيرة جداً */
         @media (max-width: 360px) {
             .brand-name {
                 font-size: 24px !important;
@@ -1290,13 +1196,8 @@
             .dialog-content {
                 padding: 25px 20px;
             }
-            
-            .features-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
         }
 
-        /* للشاشات الكبيرة جداً */
         @media (min-width: 1600px) {
             .container {
                 max-width: 1400px;
@@ -1307,7 +1208,6 @@
             }
         }
 
-        /* تحسينات للأجهزة اللمسية */
         @media (hover: none) and (pointer: coarse) {
             .app-card:hover {
                 transform: none;
@@ -1326,7 +1226,6 @@
             }
         }
 
-        /* تحسين أداء الأنيميشن على الأجهزة الضعيفة */
         @media (prefers-reduced-motion: reduce) {
             *,
             *::before,
@@ -1343,7 +1242,6 @@
             }
         }
 
-        /* تحسينات للطباعة */
         @media print {
             .theme-toggle-container,
             .view-toggle-container,
@@ -1359,16 +1257,9 @@
                 break-inside: avoid;
             }
         }
-
-        /* ========== نهاية الجزء 7 ========== */
     </style>
 </head>
 <body>
-
-<!-- ==========================================
-         الجزء 8: HTML + JavaScript (الأخير)
-    ========================================== -->
-
     <div class="tech-lines">
         <div class="tech-line" data-code="0x7A4F"></div>
         <div class="tech-line" data-code="1100101"></div>
@@ -1431,206 +1322,192 @@
             <div class="brand-subtitle">تطبيقات احترافية لتجربة مميزة</div>
         </div>
 
-        <div class="apps-grid" id="apps-grid">
-            <div class="app-card" onclick="openDialog('azkari')">
-                <div class="app-icon">📿</div>
-                <div class="app-content">
-                    <div class="app-name">أذكاري</div>
-                    <div class="app-description">رفيقك اليومي للأذكار والأدعية مع إمكانية التخصيص الكامل</div>
-                    <button class="view-details-btn" onclick="event.stopPropagation(); openDialog('azkari')">
-                        <span>📋</span>
-                        <span>التفاصيل</span>
-                    </button>
-                </div>
-            </div>
-
-            <div class="app-card" onclick="openDialog('ministry')">
-                <div class="app-icon">📱</div>
-                <div class="app-content">
-                    <div class="app-name">إدارة المحتوى</div>
-                    <div class="app-description">منصة متكاملة لإدارة ونشر المحتوى الرقمي بجميع أنواعه</div>
-                    <button class="view-details-btn" onclick="event.stopPropagation(); openDialog('ministry')">
-                        <span>📋</span>
-                        <span>التفاصيل</span>
-                    </button>
-                </div>
-            </div>
-            <div class="app-card" onclick="openDialog('voicelink')">
-    <div class="app-icon">🎙️</div>
-    <div class="app-content">
-        <div class="app-name">VoiceLink</div>
-        <div class="app-description">تطبيق بث صوتي شبكي للتواصل المباشر عبر الشبكة المحلية</div>
-        <button class="view-details-btn" onclick="event.stopPropagation(); openDialog('voicelink')">
-            <span>📋</span>
-            <span>التفاصيل</span>
-        </button>
-    </div>
-</div>
-        </div>
+        <div class="apps-grid" id="apps-grid"></div>
     </div>
 
     <div class="footer">
         <p>جميع الحقوق محفوظة © 2025 BinAref</p>
     </div>
 
-    <div class="dialog-overlay" id="dialog-azkari" onclick="closeDialogOnOverlay(event, 'azkari')">
-        <div class="dialog-content" onclick="event.stopPropagation()">
-            <div class="dialog-close" onclick="closeDialog('azkari')">×</div>
+    <div id="dialogs-container"></div>
+<script>
+        // ==========================================
+        //  إعدادات Supabase
+        // ==========================================
+        const SUPABASE_URL = 'https://ugmallekycxnzejydafw.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVnbWFsbGVreWN4bnplanlkYWZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU2NTI1MjEsImV4cCI6MjA4MTIyODUyMX0.ITtbUhlsFM9y_v8e6ymSluGcqExzZq13Npz97z2KzLw';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        let appsData = [];
+        const featuresMap = {
+            'azkari': [
+                { icon: '📚', text: 'مكتبة شاملة للأذكار' },
+                { icon: '🎨', text: 'تخصيص كامل للثيمات' },
+                { icon: '🔢', text: 'عداد ذكي ومرن' },
+                { icon: '✏️', text: 'أذكار ومذكرات مخصصة' },
+                { icon: '📱', text: 'تجربة استخدام سلسة' },
+                { icon: '⭐', text: 'أذكارك المفضلة' }
+            ],
+            'ministry': [
+                { icon: '📝', text: 'المنشورات التفاعلية' },
+                { icon: '📖', text: 'مكتبة الكتب الرقمية' },
+                { icon: '🎬', text: 'مشغل الفيديوهات المتطور' },
+                { icon: '🎵', text: 'مشغل الصوتيات الذكي' },
+                { icon: '👨‍💼', text: 'لوحة تحكم المدير' },
+                { icon: '📊', text: 'إحصائيات متقدمة' }
+            ],
+            'voicelink': [
+                { icon: '🎙️', text: 'بث صوتي بجودة عالية' },
+                { icon: '📡', text: 'اكتشاف تلقائي للأجهزة' },
+                { icon: '👥', text: 'دعم عدة مستمعين' },
+                { icon: '⚡', text: 'أداء فائق السرعة' },
+                { icon: '🔐', text: 'مصادقة آمنة' },
+                { icon: '🌐', text: 'اتصال مباشر P2P' }
+            ]
+        };
+
+        // ==========================================
+        //  تحميل التطبيقات من Supabase
+        // ==========================================
+        async function loadApps() {
+            try {
+                const { data, error } = await supabase
+                    .from('apps')
+                    .select('*');
+
+                if (error) throw error;
+
+                appsData = data;
+                renderApps();
+                renderDialogs();
+            } catch (error) {
+                console.error('خطأ في تحميل التطبيقات:', error);
+                alert('⚠️ خطأ في تحميل البيانات. يرجى المحاولة لاحقاً.');
+            }
+        }
+
+        // ==========================================
+        //  عرض التطبيقات
+        // ==========================================
+        function renderApps() {
+            const grid = document.getElementById('apps-grid');
+            grid.innerHTML = appsData.map(app => `
+                <div class="app-card" onclick="openDialog('${app.app_id}')">
+                    <div class="app-icon">${app.app_icon}</div>
+                    <div class="app-content">
+                        <div class="app-name">${app.app_name}</div>
+                        <div class="app-description">${app.description}</div>
+                        <button class="view-details-btn" onclick="event.stopPropagation(); openDialog('${app.app_id}')">
+                            <span>📋</span>
+                            <span>التفاصيل</span>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ==========================================
+        //  عرض نوافذ التفاصيل
+        // ==========================================
+        function renderDialogs() {
+            const container = document.getElementById('dialogs-container');
+            container.innerHTML = appsData.map(app => {
+                const features = featuresMap[app.app_id] || [];
+                return `
+                    <div class="dialog-overlay" id="dialog-${app.app_id}" onclick="closeDialogOnOverlay(event, '${app.app_id}')">
+                        <div class="dialog-content" onclick="event.stopPropagation()">
+                            <div class="dialog-close" onclick="closeDialog('${app.app_id}')">×</div>
+                            <div class="dialog-header">
+                                <div class="dialog-icon">${app.app_icon}</div>
+                                <div class="dialog-name">${app.app_name}</div>
+                                <div class="dialog-description">${app.description}</div>
+                            </div>
+                            <div class="features-title">المميزات الرئيسية</div>
+                            <div class="features-grid">
+                                ${features.map(f => `
+                                    <div class="feature-item">
+                                        <span class="feature-icon">${f.icon}</span>
+                                        <div class="feature-text">${f.text}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <button class="download-btn" onclick="downloadApp('${app.app_id}')">
+                                <span>⬇</span>
+                                <span>تحميل التطبيق</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // ==========================================
+        //  التحقق من كلمة السر وبدء التحميل
+        // ==========================================
+        async function downloadApp(appId) {
+            const password = prompt('🔐 أدخل كلمة السر للتحميل:');
             
-            <div class="dialog-header">
-                <div class="dialog-icon">📿</div>
-                <div class="dialog-name">أذكاري</div>
-                <div class="dialog-description">
-                    رفيقك اليومي للأذكار والأدعية مع إمكانية التخصيص الكامل
-                </div>
-            </div>
+            if (!password) return;
 
-            <div class="dialog-features">
-                <div class="features-title">المميزات الرئيسية</div>
-                <div class="features-grid">
-                    <div class="feature-item">
-                        <span class="feature-icon">📚</span>
-                        <div class="feature-text">مكتبة شاملة للأذكار</div>
-                    </div>
-                    <div class="feature-item">
-                        <span class="feature-icon">🎨</span>
-                        <div class="feature-text">تخصيص كامل للثيمات</div>
-                    </div>
-                    <div class="feature-item">
-                        <span class="feature-icon">🔢</span>
-                        <div class="feature-text">عداد ذكي ومرن</div>
-                    </div>
-                    <div class="feature-item">
-                        <span class="feature-icon">✏️</span>
-                        <div class="feature-text">أذكار ومذكرات مخصصة</div>
-                    </div>
-                    <div class="feature-item">
-                        <span class="feature-icon">📱</span>
-                        <div class="feature-text">تجربة استخدام سلسة</div>
-                    </div>
-                    <div class="feature-item">
-                        <span class="feature-icon">⭐</span>
-                        <div class="feature-text">أذكارك المفضلة</div>
-                    </div>
-                </div>
-            </div>
+            const btn = event.target.closest('.download-btn');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loading-spinner"></span> <span>جاري التحقق...</span>';
 
-            <button class="download-btn" onclick="downloadApp('https://github.com/BinAref/My-Apps/releases/download/v1.0/Azkari.apk')">
-                <span>⬇</span>
-                <span>تحميل التطبيق</span>
-            </button>
-        </div>
-    </div>
+            try {
+                // التحقق من كلمة السر
+                const { data: passwords, error: fetchError } = await supabase
+                    .from('passwords')
+                    .select('*')
+                    .eq('app_id', appId)
+                    .eq('password_key', password.trim())
+                    .eq('used', false);
 
-    <div class="dialog-overlay" id="dialog-ministry" onclick="closeDialogOnOverlay(event, 'ministry')">
-        <div class="dialog-content" onclick="event.stopPropagation()">
-            <div class="dialog-close" onclick="closeDialog('ministry')">×</div>
-            
-            <div class="dialog-header">
-                <div class="dialog-icon">📱</div>
-                <div class="dialog-name">إدارة المحتوى</div>
-                <div class="dialog-description">
-                    منصة متكاملة لإدارة ونشر المحتوى الرقمي بجميع أنواعه
-                </div>
-            </div>
+                if (fetchError) throw fetchError;
 
-            <div class="dialog-features">
-                <div class="features-title">المميزات الرئيسية</div>
-                <div class="features-grid">
-                    <div class="feature-item">
-                        <span class="feature-icon">📝</span>
-                        <div class="feature-text">المنشورات التفاعلية</div>
-                    </div>
-                    <div class="feature-item">
-                        <span class="feature-icon">📖</span>
-                        <div class="feature-text">مكتبة الكتب الرقمية</div>
-                    </div>
-                    <div class="feature-item">
-                        <span class="feature-icon">🎬</span>
-                        <div class="feature-text">مشغل الفيديوهات المتطور</div>
-                    </div>
-                    <div class="feature-item">
-                        <span class="feature-icon">🎵</span>
-                        <div class="feature-text">مشغل الصوتيات الذكي</div>
-                    </div>
-                    <div class="feature-item">
-                        <span class="feature-icon">👨‍💼</span>
-                        <div class="feature-text">لوحة تحكم المدير</div>
-                    </div>
-                    <div class="feature-item">
-                        <span class="feature-icon">📊</span>
-                        <div class="feature-text">إحصائيات متقدمة</div>
-                    </div>
-                </div>
-            </div>
+                if (!passwords || passwords.length === 0) {
+                    alert('❌ كلمة سر غير صحيحة أو مستخدمة مسبقاً');
+                    btn.disabled = false;
+                    btn.innerHTML = '<span>⬇</span> <span>تحميل التطبيق</span>';
+                    return;
+                }
 
-            <button class="download-btn" onclick="downloadApp('https://github.com/BinAref/My-Apps/releases/download/v1.0/Minstiry.apk')">
-                <span>⬇</span>
-                <span>تحميل التطبيق</span>
-            </button>
-        </div>
-    </div>
+                // تحديث حالة كلمة السر
+                const passwordId = passwords[0].id;
+                const { error: updateError } = await supabase
+                    .from('passwords')
+                    .update({ used: true, used_at: new Date().toISOString() })
+                    .eq('id', passwordId);
 
-    <div class="dialog-overlay" id="dialog-voicelink" onclick="closeDialogOnOverlay(event, 'voicelink')">
-    <div class="dialog-content" onclick="event.stopPropagation()">
-        <div class="dialog-close" onclick="closeDialog('voicelink')">×</div>
-        
-        <div class="dialog-header">
-            <div class="dialog-icon">🎙️</div>
-            <div class="dialog-name">VoiceLink</div>
-            <div class="dialog-description">
-                منصة بث صوتي احترافية للتواصل الفوري عبر الشبكة المحلية
-            </div>
-        </div>
+                if (updateError) throw updateError;
 
-        <div class="dialog-features">
-            <div class="features-title">المميزات الرئيسية</div>
-            <div class="features-grid">
-                <div class="feature-item">
-                    <span class="feature-icon">🎙️</span>
-                    <div class="feature-text">بث صوتي بجودة عالية</div>
-                </div>
-                <div class="feature-item">
-                    <span class="feature-icon">📡</span>
-                    <div class="feature-text">اكتشاف تلقائي للأجهزة</div>
-                </div>
-                <div class="feature-item">
-                    <span class="feature-icon">👥</span>
-                    <div class="feature-text">دعم عدة مستمعين</div>
-                </div>
-                <div class="feature-item">
-                    <span class="feature-icon">⚡</span>
-                    <div class="feature-text">أداء فائق السرعة</div>
-                </div>
-                <div class="feature-item">
-                    <span class="feature-icon">🔐</span>
-                    <div class="feature-text">مصادقة آمنة</div>
-                </div>
-                <div class="feature-item">
-                    <span class="feature-icon">🌐</span>
-                    <div class="feature-text">اتصال مباشر P2P</div>
-                </div>
-            </div>
-        </div>
+                // الحصول على رابط التحميل
+                const app = appsData.find(a => a.app_id === appId);
+                if (app) {
+                    alert('✅ تم التحقق بنجاح! جاري بدء التحميل...');
+                    window.location.href = app.download_url;
+                }
 
-        <button class="download-btn" onclick="downloadApp('https://github.com/BinAref/My-Apps/releases/download/v1.0/VoiceLink.apk')">
-            <span>⬇</span>
-            <span>تحميل التطبيق</span>
-        </button>
-    </div>
-</div>
+                btn.disabled = false;
+                btn.innerHTML = '<span>⬇</span> <span>تحميل التطبيق</span>';
+                closeDialog(appId);
 
-    <script>
+            } catch (error) {
+                console.error('خطأ:', error);
+                alert('⚠️ حدث خطأ. يرجى المحاولة مرة أخرى.');
+                btn.disabled = false;
+                btn.innerHTML = '<span>⬇</span> <span>تحميل التطبيق</span>';
+            }
+        }
+
+        // ==========================================
+        //  دوال التحكم في العرض والثيم
+        // ==========================================
         let isListView = false;
         let manualOverride = false;
 
         function getAutoViewMode() {
             const width = window.innerWidth;
-            if (width >= 481 && width <= 768) {
-                return 'list';
-            } else {
-                return 'grid';
-            }
+            return (width >= 481 && width <= 768) ? 'list' : 'grid';
         }
 
         function applyViewMode(mode) {
@@ -1658,18 +1535,12 @@
             
             html.setAttribute('data-theme', newTheme);
             localStorage.setItem('theme', newTheme);
-            
             updateThemeButton(newTheme);
         }
 
         function updateThemeButton(theme) {
             const icon = document.getElementById('theme-icon');
-            
-            if (theme === 'light') {
-                icon.textContent = '🌙';
-            } else {
-                icon.textContent = '☀️';
-            }
+            icon.textContent = theme === 'light' ? '🌙' : '☀️';
         }
 
         function toggleView() {
@@ -1680,25 +1551,32 @@
             sessionStorage.setItem('manualViewMode', mode);
         }
 
-        let resizeTimer;
-        window.addEventListener('resize', () => {
-            clearTimeout(resizeTimer);
-            resizeTimer = setTimeout(() => {
-                if (!manualOverride) {
-                    const autoMode = getAutoViewMode();
-                    applyViewMode(autoMode);
-                }
-            }, 250);
-        });
+        function openDialog(appId) {
+            const dialog = document.getElementById('dialog-' + appId);
+            if (dialog) dialog.classList.add('active');
+        }
 
+        function closeDialog(appId) {
+            const dialog = document.getElementById('dialog-' + appId);
+            if (dialog) dialog.classList.remove('active');
+        }
+
+        function closeDialogOnOverlay(event, appId) {
+            if (event.target.classList.contains('dialog-overlay')) {
+                closeDialog(appId);
+            }
+        }
+
+        // ==========================================
+        //  تهيئة الصفحة عند التحميل
+        // ==========================================
         document.addEventListener('DOMContentLoaded', () => {
+            // تحميل الثيم
             let savedTheme = localStorage.getItem('theme');
-            
             if (!savedTheme) {
                 const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
                 savedTheme = prefersDark ? 'dark' : 'light';
             }
-            
             document.documentElement.setAttribute('data-theme', savedTheme);
             updateThemeButton(savedTheme);
 
@@ -1710,46 +1588,37 @@
                 }
             });
 
+            // تحميل وضع العرض
             const manualMode = sessionStorage.getItem('manualViewMode');
             if (manualMode) {
                 manualOverride = true;
                 applyViewMode(manualMode);
             } else {
-                const autoMode = getAutoViewMode();
-                applyViewMode(autoMode);
+                applyViewMode(getAutoViewMode());
             }
+
+            // تحميل التطبيقات من Supabase
+            loadApps();
         });
 
-        function openDialog(appName) {
-            const dialog = document.getElementById('dialog-' + appName);
-            dialog.classList.add('active');
-        }
+        // التعامل مع تغيير حجم النافذة
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                if (!manualOverride) {
+                    applyViewMode(getAutoViewMode());
+                }
+            }, 250);
+        });
 
-        function closeDialog(appName) {
-            const dialog = document.getElementById('dialog-' + appName);
-            dialog.classList.remove('active');
-        }
-
-        function closeDialogOnOverlay(event, appName) {
-            if (event.target.classList.contains('dialog-overlay')) {
-                closeDialog(appName);
-            }
-        }
-
+        // إغلاق النوافذ بزر Escape
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 const activeDialog = document.querySelector('.dialog-overlay.active');
-                if (activeDialog) {
-                    activeDialog.classList.remove('active');
-                }
+                if (activeDialog) activeDialog.classList.remove('active');
             }
         });
-
-        function downloadApp(githubUrl) {
-            window.location.href = githubUrl;
-        }
     </script>
 </body>
 </html>
-
-<!-- ========== نهاية الجزء 8 - اكتمل الملف ========== -->
