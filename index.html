@@ -69,38 +69,36 @@
         }
 
         [data-theme="light"] {
+    /* الخلفيات */
+    --bg-gradient-start: #ffffff;  /* أبيض نظيف */
+    --bg-gradient-mid: #f7f9fc;
+    --bg-gradient-end: #edf2f7;
 
-            --bg-gradient-start: #e0f2fe;
+    /* نصوص */
+    --text-primary: #0a1f44;        /* أزرق داكن تقني */
+    --text-secondary: #475569;      /* رمادي مريح للعين */
 
-            --bg-gradient-mid: #bae6fd;
+    /* ألوان التمييز */
+    --accent-color: #1652f0;        /* أزرق احترافي للروابط والأزرار */
 
-            --bg-gradient-end: #7dd3fc;
+    /* الأزرار */
+    --btn-bg: rgba(22, 82, 240, 0.12);
+    --btn-hover-bg: rgba(22, 82, 240, 0.24);
 
-            --card-bg: rgba(255, 255, 255, 0.7);
+    /* الحدود والظلال */
+    --border-color: rgba(10, 31, 68, 0.12);
+    --shadow-color: rgba(10, 31, 68, 0.15);
 
-            --card-hover-bg: rgba(255, 255, 255, 0.9);
+    /* زجاجي */
+    --card-bg: rgba(255, 255, 255, 0.85);
+    --card-hover-bg: rgba(255, 255, 255, 0.95);
+    --glass-border: rgba(10, 31, 68, 0.1);
+    --glass-shadow: rgba(10, 31, 68, 0.08);
 
-            --text-primary: #0c4a6e;
+    /* خلفية الديالوج */
+    --dialog-overlay-bg: rgba(237, 242, 247, 0.8);
+}
 
-            --text-secondary: #075985;
-
-            --border-color: rgba(14, 165, 233, 0.2);
-
-            --shadow-color: rgba(14, 165, 233, 0.15);
-
-            --btn-bg: rgba(14, 165, 233, 0.15);
-
-            --btn-hover-bg: rgba(14, 165, 233, 0.25);
-
-            --accent-color: #0ea5e9;
-
-            --glass-border: rgba(255, 255, 255, 0.5);
-
-            --glass-shadow: rgba(14, 165, 233, 0.1);
-
-            --dialog-overlay-bg: rgba(186, 230, 253, 0.75);
-
-        }
 
         html, body {
 
@@ -1948,19 +1946,7 @@
 
         ========================================== */
 
-@media (max-width: 768px) {
-            .header {
-                padding: 60px 15px 15px;
-            }
-            
-            .apps-container {
-                padding: 15px;
-            }
-            
-            .footer {
-                padding: 12px 15px;
-            }
-        }
+
 
         @media (min-width: 481px) and (max-width: 768px) {
 
