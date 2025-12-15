@@ -1947,15 +1947,14 @@ async function supabaseQuery(table, options = {}) {
         // ==========================================
 
         async function downloadApp(appId) {
-    // إنشاء نافذة مخصصة بدلاً من prompt
     const overlay = document.createElement('div');
-overlay.className = 'dialog-overlay active';
-overlay.style.zIndex = '3000';
-overlay.style.paddingTop = '100px';
-overlay.style.alignItems = 'flex-start';
+    overlay.className = 'dialog-overlay active';
+    overlay.style.zIndex = '3000';
+    overlay.style.paddingTop = '100px';
+    overlay.style.alignItems = 'flex-start';
     
     overlay.innerHTML = `
-    <div class="dialog-content" style="max-width: 200px; margin-top: 15vh;" onclick="event.stopPropagation()">
+        <div class="dialog-content" style="max-width: 200px;" onclick="event.stopPropagation()">
             <div class="dialog-close" onclick="this.closest('.dialog-overlay').remove()">×</div>
             <div class="dialog-header">
                 <div class="dialog-icon">🔐</div>
