@@ -1989,15 +1989,18 @@ async function supabaseQuery(table, options = {}) {
     });
     
     input.addEventListener('blur', function() {
-        this.style.borderColor = 'var(--glass-border)';
-        this.style.boxShadow = 'none';
-        
-        // إرجاع الديالوج للمنتصف عند إخفاء لوحة المفاتيح
-        setTimeout(() => {
+    this.style.borderColor = 'var(--glass-border)';
+    this.style.boxShadow = 'none';
+    
+    // إرجاع الديالوج للمنتصف فقط إذا لم يكن هناك تفاعل مع الأزرار
+    setTimeout(() => {
+        // تحقق إذا كان المستخدم لم ينقر على أي عنصر داخل الديالوج
+        if (!dialog.contains(document.activeElement)) {
             overlay.style.alignItems = 'center';
             overlay.style.paddingTop = '0';
-        }, 300);
-    });
+        }
+    }, 300);
+});
     
     input.focus();
     
