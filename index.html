@@ -1953,7 +1953,7 @@ async function supabaseQuery(table, options = {}) {
     overlay.style.zIndex = '3000';
     
     overlay.innerHTML = `
-        <div class="dialog-content" id="password-dialog" style="max-width: 200px;" onclick="event.stopPropagation()">
+    <div class="dialog-content" id="password-dialog" style="max-width: 400px;" onclick="event.stopPropagation()">
             <div class="dialog-close" onclick="this.closest('.dialog-overlay').remove()">×</div>
             <div class="dialog-header">
                 <div class="dialog-icon">🔐</div>
