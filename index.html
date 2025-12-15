@@ -1725,6 +1725,120 @@ async function supabaseQuery(table, options = {}) {
 
 }
 
+
+// ==========================================
+//  نظام التعرف على الجهاز (Device Fingerprinting)
+// ==========================================
+async function getDeviceFingerprint() {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    ctx.textBaseline = 'top';
+    ctx.font = '14px Arial';
+    ctx.fillText('Device ID', 2, 2);
+    const canvasData = canvas.toDataURL();
+    
+    const fingerprint = {
+        userAgent: navigator.userAgent,
+        language: navigator.language,
+        platform: navigator.platform,
+        screenResolution: `${screen.width}x${screen.height}`,
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        canvas: canvasData,
+        hardwareConcurrency: navigator.hardwareConcurrency,
+        deviceMemory: navigator.deviceMemory || 'unknown',
+        colorDepth: screen.colorDepth,
+        pixelRatio: window.devicePixelRatio
+    };
+    
+    const fpString = JSON.stringify(fingerprint);
+    
+    // تحويل البصمة إلى hash
+    let hash = 0;
+    for (let i = 0; i < fpString.length; i++) {
+        const char = fpString.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash;
+    }
+    
+    return 'device_' + Math.abs(hash).toString(36);
+}
+
+// حفظ واسترجاع حالة الحظر من localStorage + IndexedDB
+async function getDeviceLockStatus() {
+    const deviceId = await getDeviceFingerprint();
+    
+    // محاولة القراءة من localStorage أولاً
+    const localData = localStorage.getItem('device_lock_' + deviceId);
+    if (localData) {
+        return JSON.parse(localData);
+    }
+    
+    // محاولة القراءة من IndexedDB كنسخة احتياطية
+    try {
+        const dbData = await new Promise((resolve, reject) => {
+            const request = indexedDB.open('DeviceLockDB', 1);
+            request.onerror = () => reject(request.error);
+            request.onsuccess = () => {
+                const db = request.result;
+                if (!db.objectStoreNames.contains('locks')) {
+                    resolve(null);
+                    return;
+                }
+                const transaction = db.transaction(['locks'], 'readonly');
+                const store = transaction.objectStore('locks');
+                const getRequest = store.get(deviceId);
+                getRequest.onsuccess = () => resolve(getRequest.result);
+                getRequest.onerror = () => resolve(null);
+            };
+            request.onupgradeneeded = (event) => {
+                const db = event.target.result;
+                if (!db.objectStoreNames.contains('locks')) {
+                    db.createObjectStore('locks', { keyPath: 'deviceId' });
+                }
+            };
+        });
+        
+        if (dbData) {
+            return dbData;
+        }
+    } catch (e) {
+        console.log('IndexedDB not available');
+    }
+    
+    return null;
+}
+
+async function setDeviceLockStatus(data) {
+    const deviceId = await getDeviceFingerprint();
+    
+    // حفظ في localStorage
+    localStorage.setItem('device_lock_' + deviceId, JSON.stringify(data));
+    
+    // حفظ في IndexedDB كنسخة احتياطية
+    try {
+        await new Promise((resolve, reject) => {
+            const request = indexedDB.open('DeviceLockDB', 1);
+            request.onerror = () => reject(request.error);
+            request.onsuccess = () => {
+                const db = request.result;
+                const transaction = db.transaction(['locks'], 'readwrite');
+                const store = transaction.objectStore('locks');
+                store.put({ deviceId, ...data });
+                transaction.oncomplete = () => resolve();
+            };
+            request.onupgradeneeded = (event) => {
+                const db = event.target.result;
+                if (!db.objectStoreNames.contains('locks')) {
+                    db.createObjectStore('locks', { keyPath: 'deviceId' });
+                }
+            };
+        });
+    } catch (e) {
+        console.log('IndexedDB save failed');
+    }
+}
+
+
         let appsData = [];
 
         const featuresMap = {
@@ -1946,19 +2060,107 @@ async function supabaseQuery(table, options = {}) {
 
         // ==========================================
 
-        async function downloadApp(appId) {
-    // إنشاء نافذة مخصصة بدلاً من prompt
+async function downloadApp(appId) {
+    // الحصول على حالة الحظر للجهاز
+    const deviceLock = await getDeviceLockStatus();
+    
+    let tracker = deviceLock || {};
+    
+    // تهيئة عداد المحاولات لهذا التطبيق
+    if (!tracker[appId]) {
+        tracker[appId] = {
+            attempts: 0,
+            lockedUntil: null
+        };
+    }
+    
+    const appTracker = tracker[appId];
+    
+    // دالة لتحديث العداد التنازلي
+    function updateCountdown(element, endTime) {
+        const interval = setInterval(() => {
+            const now = Date.now();
+            const remaining = endTime - now;
+            
+            if (remaining <= 0) {
+                clearInterval(interval);
+                element.textContent = 'انتهى وقت الحظر';
+                return;
+            }
+            
+            const minutes = Math.floor(remaining / 60000);
+            const seconds = Math.floor((remaining % 60000) / 1000);
+            element.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }, 1000);
+        
+        return interval;
+    }
+    
+    // التحقق من الحظر
+    if (appTracker.lockedUntil && Date.now() < appTracker.lockedUntil) {
+        const lockOverlay = document.createElement('div');
+        lockOverlay.className = 'dialog-overlay active';
+        lockOverlay.style.zIndex = '3000';
+        lockOverlay.innerHTML = `
+            <div class="dialog-content" style="max-width: 350px; text-align: center;">
+                <div class="dialog-close" onclick="this.closest('.dialog-overlay').remove()">×</div>
+                <div class="dialog-header">
+                    <div class="dialog-icon" style="font-size: 60px;">🚫</div>
+                    <div class="dialog-name" style="color: #ef4444;">تم حظر هذا الجهاز!</div>
+                    <div class="dialog-description" style="margin-top: 15px; line-height: 1.8;">
+                        لقد تجاوزت الحد المسموح من المحاولات (5 محاولات).
+                        <br><br>
+                        <strong style="color: var(--text-primary); font-size: 20px; display: block; margin: 15px 0;">
+                            ⏱ <span id="countdown-timer">--:--</span>
+                        </strong>
+                        <span style="font-size: 12px; color: var(--text-secondary);">الوقت المتبقي للحظر</span>
+                        <br><br>
+                        للحصول على كلمة السر، يرجى التواصل مع المسؤول.
+                    </div>
+                </div>
+                <button class="download-btn" onclick="this.closest('.dialog-overlay').remove()" style="background: linear-gradient(135deg, #ef4444, #dc2626);">
+                    <span>✓</span>
+                    <span>حسناً</span>
+                </button>
+            </div>
+        `;
+        document.body.appendChild(lockOverlay);
+        
+        const countdownElement = document.getElementById('countdown-timer');
+        const countdownInterval = updateCountdown(countdownElement, appTracker.lockedUntil);
+        
+        // تنظيف العداد عند إغلاق النافذة
+        lockOverlay.addEventListener('click', function(e) {
+            if (e.target === lockOverlay || e.target.classList.contains('dialog-close') || e.target.closest('.download-btn')) {
+                clearInterval(countdownInterval);
+            }
+        });
+        
+        return;
+    }
+    
+    // إعادة تعيين العداد إذا انتهى وقت الحظر
+    if (appTracker.lockedUntil && Date.now() >= appTracker.lockedUntil) {
+        appTracker.attempts = 0;
+        appTracker.lockedUntil = null;
+        await setDeviceLockStatus(tracker);
+    }
+    
+    // إنشاء نافذة مخصصة
     const overlay = document.createElement('div');
     overlay.className = 'dialog-overlay active';
     overlay.style.zIndex = '3000';
     
     overlay.innerHTML = `
-    <div class="dialog-content" id="password-dialog" style="max-width: 400px;" onclick="event.stopPropagation()">
+        <div class="dialog-content" id="password-dialog" style="max-width: 350px;" onclick="event.stopPropagation()">
             <div class="dialog-close" onclick="this.closest('.dialog-overlay').remove()">×</div>
             <div class="dialog-header">
                 <div class="dialog-icon">🔐</div>
                 <div class="dialog-name">كلمة السر</div>
                 <div class="dialog-description">أدخل كلمة السر للمتابعة في تحميل التطبيق</div>
+                <div id="attempts-counter" style="color: var(--text-secondary); font-size: 11px; margin-top: 8px;">
+                    المحاولات المتبقية: ${5 - appTracker.attempts} من 5
+                </div>
             </div>
             <input type="password" id="password-input" placeholder="أدخل كلمة السر" 
                    style="width: 100%; padding: 12px 20px; border-radius: 12px; border: 1px solid var(--glass-border);
@@ -1977,30 +2179,16 @@ async function supabaseQuery(table, options = {}) {
     const input = document.getElementById('password-input');
     const confirmBtn = document.getElementById('confirm-password-btn');
     const dialog = document.getElementById('password-dialog');
+    const attemptsCounter = document.getElementById('attempts-counter');
     
     // التعامل مع ظهور لوحة المفاتيح
     input.addEventListener('focus', function() {
         this.style.borderColor = 'var(--accent-color)';
         this.style.boxShadow = '0 0 20px rgba(59, 130, 246, 0.3)';
         
-        // نقل الديالوج لأسفل عند ظهور لوحة المفاتيح
         overlay.style.alignItems = 'flex-start';
         overlay.style.paddingTop = '20px';
     });
-    
-    input.addEventListener('blur', function() {
-    this.style.borderColor = 'var(--glass-border)';
-    this.style.boxShadow = 'none';
-    
-    // إرجاع الديالوج للمنتصف فقط إذا لم يكن هناك تفاعل مع الأزرار
-    setTimeout(() => {
-        // تحقق إذا كان المستخدم لم ينقر على أي عنصر داخل الديالوج
-        if (!dialog.contains(document.activeElement)) {
-            overlay.style.alignItems = 'center';
-            overlay.style.paddingTop = '0';
-        }
-    }, 300);
-});
     
     input.focus();
     
@@ -2032,13 +2220,74 @@ async function supabaseQuery(table, options = {}) {
             console.log('🔍 نتيجة البحث:', passwords);
             
             if (!passwords || passwords.length === 0) {
+                // زيادة عدد المحاولات الفاشلة
+                appTracker.attempts++;
+                await setDeviceLockStatus(tracker);
+                
+                const remainingAttempts = 5 - appTracker.attempts;
+                
+                // تحديث عداد المحاولات
+                attemptsCounter.textContent = `المحاولات المتبقية: ${remainingAttempts} من 5`;
+                attemptsCounter.style.color = remainingAttempts <= 2 ? '#ef4444' : 'var(--text-secondary)';
+                
+                // التحقق من تجاوز الحد المسموح
+                if (appTracker.attempts >= 5) {
+                    appTracker.lockedUntil = Date.now() + (15 * 60 * 1000); // حظر لمدة 15 دقيقة
+                    await setDeviceLockStatus(tracker);
+                    overlay.remove();
+                    
+                    const lockOverlay = document.createElement('div');
+                    lockOverlay.className = 'dialog-overlay active';
+                    lockOverlay.style.zIndex = '3000';
+                    lockOverlay.innerHTML = `
+                        <div class="dialog-content" style="max-width: 350px; text-align: center;">
+                            <div class="dialog-close" onclick="this.closest('.dialog-overlay').remove()">×</div>
+                            <div class="dialog-header">
+                                <div class="dialog-icon" style="font-size: 60px;">🚫</div>
+                                <div class="dialog-name" style="color: #ef4444;">تم حظر هذا الجهاز!</div>
+                                <div class="dialog-description" style="margin-top: 15px; line-height: 1.8;">
+                                    لقد تجاوزت الحد المسموح من المحاولات (5 محاولات).
+                                    <br><br>
+                                    <strong style="color: var(--text-primary); font-size: 20px; display: block; margin: 15px 0;">
+                                        ⏱ <span id="countdown-timer">15:00</span>
+                                    </strong>
+                                    <span style="font-size: 12px; color: var(--text-secondary);">تم حظر الجهاز لمدة 15 دقيقة</span>
+                                    <br><br>
+                                    إذا نسيت كلمة السر، يرجى التواصل مع المسؤول.
+                                </div>
+                            </div>
+                            <button class="download-btn" onclick="this.closest('.dialog-overlay').remove()" style="background: linear-gradient(135deg, #ef4444, #dc2626);">
+                                <span>✓</span>
+                                <span>حسناً</span>
+                            </button>
+                        </div>
+                    `;
+                    document.body.appendChild(lockOverlay);
+                    
+                    const countdownElement = document.getElementById('countdown-timer');
+                    const countdownInterval = updateCountdown(countdownElement, appTracker.lockedUntil);
+                    
+                    lockOverlay.addEventListener('click', function(e) {
+                        if (e.target === lockOverlay || e.target.classList.contains('dialog-close') || e.target.closest('.download-btn')) {
+                            clearInterval(countdownInterval);
+                        }
+                    });
+                    
+                    return;
+                }
+                
                 input.value = '';
                 input.style.borderColor = '#ef4444';
-                input.placeholder = '❌ كلمة سر غير صحيحة';
+                input.placeholder = `❌ كلمة سر خاطئة (${remainingAttempts} محاولات متبقية)`;
                 confirmBtn.disabled = false;
                 confirmBtn.innerHTML = '<span>✓</span> <span>تأكيد</span>';
                 return;
             }
+            
+            // كلمة السر صحيحة - إعادة تعيين العداد
+            appTracker.attempts = 0;
+            appTracker.lockedUntil = null;
+            await setDeviceLockStatus(tracker);
             
             const passwordId = passwords[0].id;
             await supabaseQuery('passwords', {
@@ -2088,7 +2337,6 @@ async function supabaseQuery(table, options = {}) {
         }
     });
 }
-
         // ==========================================
 
         //  دوال التحكم في العرض والثيم
