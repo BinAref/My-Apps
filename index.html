@@ -1947,14 +1947,13 @@ async function supabaseQuery(table, options = {}) {
         // ==========================================
 
         async function downloadApp(appId) {
+    // إنشاء نافذة مخصصة بدلاً من prompt
     const overlay = document.createElement('div');
     overlay.className = 'dialog-overlay active';
     overlay.style.zIndex = '3000';
-    overlay.style.paddingTop = '200px';
-    overlay.style.alignItems = 'flex-start';
     
     overlay.innerHTML = `
-        <div class="dialog-content" style="max-width: 200px;" onclick="event.stopPropagation()">
+        <div class="dialog-content" id="password-dialog" style="max-width: 200px;" onclick="event.stopPropagation()">
             <div class="dialog-close" onclick="this.closest('.dialog-overlay').remove()">×</div>
             <div class="dialog-header">
                 <div class="dialog-icon">🔐</div>
@@ -1977,19 +1976,30 @@ async function supabaseQuery(table, options = {}) {
     
     const input = document.getElementById('password-input');
     const confirmBtn = document.getElementById('confirm-password-btn');
+    const dialog = document.getElementById('password-dialog');
     
-    input.focus();
-    
-    // تحسين مظهر الإدخال عند التركيز
+    // التعامل مع ظهور لوحة المفاتيح
     input.addEventListener('focus', function() {
         this.style.borderColor = 'var(--accent-color)';
         this.style.boxShadow = '0 0 20px rgba(59, 130, 246, 0.3)';
+        
+        // نقل الديالوج لأسفل عند ظهور لوحة المفاتيح
+        overlay.style.alignItems = 'flex-start';
+        overlay.style.paddingTop = '20px';
     });
     
     input.addEventListener('blur', function() {
         this.style.borderColor = 'var(--glass-border)';
         this.style.boxShadow = 'none';
+        
+        // إرجاع الديالوج للمنتصف عند إخفاء لوحة المفاتيح
+        setTimeout(() => {
+            overlay.style.alignItems = 'center';
+            overlay.style.paddingTop = '0';
+        }, 300);
     });
+    
+    input.focus();
     
     // معالجة الضغط على Enter
     input.addEventListener('keypress', function(e) {
