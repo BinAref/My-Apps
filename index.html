@@ -1,527 +1,936 @@
 <!DOCTYPE html>
+
 <html dir="rtl" lang="ar">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:/t; style-src 'self' 'unsafe-inline'; connect-src 'self' https://ugmallekycxnzejydafw.supabase.co https://*.supabase.co; img-src 'self' data: https:;">
+
     <title>BinAref - التطبيقات</title>
+
     
+
     <style>
+
         /* ==========================================
+
            الجزء 1: إعادة تعيين أساسية والمتغيرات
+
         ========================================== */
+
         
+
         * {
+
             margin: 0;
+
             padding: 0;
+
             box-sizing: border-box;
+
         }
 
         :root {
+
             --bg-gradient-start: #000000;
+
             --bg-gradient-mid: #0a0a0a;
+
             --bg-gradient-end: #1a1a1a;
+
             --card-bg: rgba(255, 255, 255, 0.03);
+
             --card-hover-bg: rgba(255, 255, 255, 0.08);
+
             --text-primary: #ffffff;
+
             --text-secondary: #a0a0a0;
+
             --border-color: rgba(255, 255, 255, 0.08);
+
             --shadow-color: rgba(0, 0, 0, 0.8);
+
             --btn-bg: rgba(59, 130, 246, 0.15);
+
             --btn-hover-bg: rgba(59, 130, 246, 0.25);
+
             --accent-color: #3b82f6;
+
             --glass-border: rgba(255, 255, 255, 0.1);
+
             --glass-shadow: rgba(255, 255, 255, 0.05);
+
             --dialog-overlay-bg: rgba(0, 0, 0, 0.85);
+
         }
 
         [data-theme="light"] {
+
             --bg-gradient-start: #e0f2fe;
+
             --bg-gradient-mid: #bae6fd;
+
             --bg-gradient-end: #7dd3fc;
+
             --card-bg: rgba(255, 255, 255, 0.7);
+
             --card-hover-bg: rgba(255, 255, 255, 0.9);
+
             --text-primary: #0c4a6e;
+
             --text-secondary: #075985;
+
             --border-color: rgba(14, 165, 233, 0.2);
+
             --shadow-color: rgba(14, 165, 233, 0.15);
+
             --btn-bg: rgba(14, 165, 233, 0.15);
+
             --btn-hover-bg: rgba(14, 165, 233, 0.25);
+
             --accent-color: #0ea5e9;
+
             --glass-border: rgba(255, 255, 255, 0.5);
+
             --glass-shadow: rgba(14, 165, 233, 0.1);
+
             --dialog-overlay-bg: rgba(186, 230, 253, 0.75);
+
         }
 
         html, body {
+
             height: 100%;
-            overflow: hidden;
-            position: fixed;
+
+            overflow: auto;
+
+            position: relative;
+
             width: 100%;
+
         }
 
         body {
+
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
             background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-mid) 50%, var(--bg-gradient-end) 100%);
+
             position: relative;
+
             transition: background 0.3s ease;
+
             display: flex;
+
             flex-direction: column;
+
         }
 
         body::before {
+
             content: '';
+
             position: fixed;
+
             top: 0;
+
             left: 0;
+
             width: 100%;
+
             height: 100%;
+
             background: 
+
                 linear-gradient(90deg, var(--glass-border) 1px, transparent 1px),
+
                 linear-gradient(0deg, var(--glass-border) 1px, transparent 1px);
+
             background-size: 80px 80px;
+
             animation: moveGrid 20s linear infinite;
+
             opacity: 0.3;
+
             z-index: 0;
+
         }
 
         body::after {
+
             content: '';
+
             position: fixed;
+
             top: 0;
+
             left: 0;
+
             width: 100%;
+
             height: 100%;
+
             background: 
+
                 radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+
                 radial-gradient(circle at 80% 70%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+
                 radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.05) 0%, transparent 70%);
+
             z-index: 0;
+
             pointer-events: none;
+
         }
 
         @keyframes moveGrid {
+
             0% { transform: translate(0, 0); }
+
             100% { transform: translate(80px, 80px); }
+
         }
 
         .tech-lines {
+
             position: fixed;
+
             top: 0;
+
             left: 0;
+
             width: 100%;
+
             height: 100%;
+
             overflow: hidden;
+
             z-index: 0;
+
             pointer-events: none;
+
         }
 
         .tech-line {
-            position: absolute;
-            opacity: 0;
-        }
 
-        .tech-line:nth-child(1) {
+            position: absolute;
+
+            opacity: 0;
+
+        }
+.tech-line:nth-child(1) {
+
             top: 12%;
+
             left: -100%;
+
             width: 2px;
+
             height: 85px;
+
             background: linear-gradient(180deg, transparent, var(--accent-color), transparent);
+
             animation: moveLineRandom1 7.2s linear infinite;
+
             animation-delay: 0.3s;
+
         }
 
         .tech-line:nth-child(2) {
+
             top: -100%;
+
             left: 67%;
+
             width: 95px;
+
             height: 2px;
+
             background: linear-gradient(90deg, transparent, #8b5cf6, transparent);
+
             animation: moveLineRandom2 8.7s linear infinite;
+
             animation-delay: 2.1s;
+
         }
 
         .tech-line:nth-child(3) {
+
             top: 78%;
+
             right: -100%;
+
             width: 2px;
+
             height: 110px;
+
             background: linear-gradient(180deg, transparent, var(--accent-color), transparent);
+
             animation: moveLineRandom3 6.4s linear infinite;
+
             animation-delay: 4.5s;
+
         }
 
         .tech-line:nth-child(4) {
+
             bottom: -100%;
+
             right: 23%;
+
             width: 78px;
+
             height: 2px;
+
             background: linear-gradient(90deg, transparent, #8b5cf6, transparent);
+
             animation: moveLineRandom4 9.1s linear infinite;
+
             animation-delay: 1.7s;
+
         }
 
         .tech-line:nth-child(5) {
+
             top: 33%;
+
             left: -100%;
+
             width: 2px;
+
             height: 68px;
+
             background: linear-gradient(180deg, transparent, var(--accent-color), transparent);
+
             animation: moveLineRandom5 7.8s linear infinite;
+
             animation-delay: 3.2s;
+
         }
 
         .tech-line:nth-child(6) {
+
             top: -100%;
+
             right: 41%;
+
             width: 88px;
+
             height: 2px;
+
             background: linear-gradient(90deg, transparent, #8b5cf6, transparent);
+
             animation: moveLineRandom6 8.3s linear infinite;
+
             animation-delay: 5.6s;
+
         }
 
         .tech-line:nth-child(7) {
+
             top: 56%;
+
             right: -100%;
+
             width: 2px;
+
             height: 92px;
+
             background: linear-gradient(180deg, transparent, var(--accent-color), transparent);
+
             animation: moveLineRandom7 7.5s linear infinite;
+
             animation-delay: 0.8s;
+
         }
 
         .tech-line:nth-child(8) {
+
             bottom: -100%;
+
             left: 58%;
+
             width: 73px;
+
             height: 2px;
+
             background: linear-gradient(90deg, transparent, #8b5cf6, transparent);
+
             animation: moveLineRandom8 8.9s linear infinite;
+
             animation-delay: 2.9s;
+
         }
 
         .tech-line:nth-child(9) {
+
             top: 18%;
+
             left: -150%;
+
             width: 180px;
+
             height: 3px;
+
             background: linear-gradient(90deg, transparent 20%, var(--accent-color) 50%, rgba(59, 130, 246, 0.8) 60%, transparent);
+
             filter: blur(1px);
+
             box-shadow: 0 0 15px var(--accent-color);
+
             animation: shootingStarRandom1 4.2s ease-in infinite;
+
             animation-delay: 6.5s;
+
             transform: rotate(-22deg);
+
         }
 
         .tech-line:nth-child(10) {
+
             top: 64%;
+
             left: -150%;
+
             width: 150px;
+
             height: 2.5px;
+
             background: linear-gradient(90deg, transparent 20%, #8b5cf6 50%, rgba(139, 92, 246, 0.8) 60%, transparent);
+
             filter: blur(1px);
+
             box-shadow: 0 0 15px #8b5cf6;
+
             animation: shootingStarRandom2 3.8s ease-in infinite;
+
             animation-delay: 3.3s;
+
             transform: rotate(-18deg);
+
         }
 
         .tech-line:nth-child(11) {
+
             top: 42%;
+
             left: -150%;
+
             width: 165px;
+
             height: 2.5px;
+
             background: linear-gradient(90deg, transparent 20%, var(--accent-color) 50%, rgba(59, 130, 246, 0.8) 60%, transparent);
+
             filter: blur(1px);
+
             box-shadow: 0 0 15px var(--accent-color);
+
             animation: shootingStarRandom3 4.5s ease-in infinite;
+
             animation-delay: 9.2s;
+
             transform: rotate(-25deg);
+
         }
 
         @keyframes moveLineRandom1 {
+
             0% { left: -10%; opacity: 0; }
+
             10% { opacity: 0.8; }
+
             90% { opacity: 0.6; }
+
             100% { left: 110%; opacity: 0; }
+
         }
 
         @keyframes moveLineRandom2 {
+
             0% { top: -10%; opacity: 0; }
+
             10% { opacity: 0.7; }
+
             90% { opacity: 0.5; }
+
             100% { top: 110%; opacity: 0; }
+
         }
 
         @keyframes moveLineRandom3 {
+
             0% { right: -10%; opacity: 0; }
+
             10% { opacity: 0.9; }
+
             90% { opacity: 0.7; }
+
             100% { right: 110%; opacity: 0; }
+
         }
 
         @keyframes moveLineRandom4 {
+
             0% { bottom: -10%; opacity: 0; }
+
             10% { opacity: 0.6; }
+
             90% { opacity: 0.8; }
+
             100% { bottom: 110%; opacity: 0; }
+
         }
 
         @keyframes moveLineRandom5 {
+
             0% { left: -10%; opacity: 0; }
+
             10% { opacity: 0.85; }
+
             90% { opacity: 0.65; }
+
             100% { left: 110%; opacity: 0; }
+
         }
 
         @keyframes moveLineRandom6 {
+
             0% { top: -10%; opacity: 0; }
+
             10% { opacity: 0.75; }
+
             90% { opacity: 0.55; }
+
             100% { top: 110%; opacity: 0; }
+
         }
 
         @keyframes moveLineRandom7 {
+
             0% { right: -10%; opacity: 0; }
+
             10% { opacity: 0.8; }
+
             90% { opacity: 0.7; }
+
             100% { right: 110%; opacity: 0; }
+
         }
 
         @keyframes moveLineRandom8 {
+
             0% { bottom: -10%; opacity: 0; }
+
             10% { opacity: 0.7; }
+
             90% { opacity: 0.6; }
+
             100% { bottom: 110%; opacity: 0; }
+
         }
 
         @keyframes shootingStarRandom1 {
+
             0% { left: -150%; opacity: 0; }
+
             5% { opacity: 1; }
+
             95% { opacity: 0.7; }
+
             100% { left: 150%; opacity: 0; }
+
         }
 
         @keyframes shootingStarRandom2 {
+
             0% { left: -150%; opacity: 0; }
+
             5% { opacity: 0.9; }
+
             95% { opacity: 0.6; }
+
             100% { left: 150%; opacity: 0; }
+
         }
 
         @keyframes shootingStarRandom3 {
+
             0% { left: -150%; opacity: 0; }
+
             5% { opacity: 1; }
+
             95% { opacity: 0.8; }
+
             100% { left: 150%; opacity: 0; }
+
         }
 
         .hacker-numbers {
+
             position: fixed;
+
             top: 0;
+
             left: 0;
+
             width: 100%;
+
             height: 100%;
+
             overflow: hidden;
+
             z-index: 0;
+
             pointer-events: none;
+
             font-family: 'Courier New', monospace;
+
         }
 
         .hacker-number {
+
             position: absolute;
+
             color: var(--accent-color);
+
             font-size: 13px;
+
             font-weight: bold;
+
             opacity: 0;
+
             text-shadow: 0 0 10px var(--accent-color);
+
             animation: fallNumber 5s linear infinite;
+
         }
 
         .hacker-number:nth-child(1) { left: 7%; animation-delay: 0.2s; animation-duration: 4.8s; }
+
         .hacker-number:nth-child(2) { left: 18%; animation-delay: 1.3s; animation-duration: 5.2s; }
+
         .hacker-number:nth-child(3) { left: 31%; animation-delay: 2.7s; animation-duration: 4.5s; }
+
         .hacker-number:nth-child(4) { left: 44%; animation-delay: 0.9s; animation-duration: 5.5s; }
+
         .hacker-number:nth-child(5) { left: 58%; animation-delay: 3.1s; animation-duration: 4.9s; }
+
         .hacker-number:nth-child(6) { left: 71%; animation-delay: 1.8s; animation-duration: 5.3s; }
+
         .hacker-number:nth-child(7) { left: 83%; animation-delay: 2.4s; animation-duration: 4.7s; }
+
         .hacker-number:nth-child(8) { left: 93%; animation-delay: 0.5s; animation-duration: 5.1s; }
+
         .hacker-number:nth-child(9) { left: 12%; animation-delay: 3.6s; animation-duration: 4.6s; }
+
         .hacker-number:nth-child(10) { left: 63%; animation-delay: 1.1s; animation-duration: 5.4s; }
+
         .hacker-number:nth-child(11) { left: 38%; animation-delay: 2.2s; animation-duration: 4.4s; }
+
         .hacker-number:nth-child(12) { left: 77%; animation-delay: 3.8s; animation-duration: 5.6s; }
 
         @keyframes fallNumber {
+
             0% { top: -5%; opacity: 0; }
+
             8% { opacity: 0.8; }
+
             92% { opacity: 0.3; }
+
             100% { top: 105%; opacity: 0; }
+
         }
 
         .tech-circles {
+
             position: fixed;
+
             top: 0;
+
             left: 0;
+
             width: 100%;
+
             height: 100%;
+
             overflow: hidden;
+
             z-index: 0;
+
             pointer-events: none;
+
         }
 
         .tech-circle {
+
             position: absolute;
+
             border: 1px solid var(--glass-border);
+
             border-radius: 50%;
+
             opacity: 0.2;
+
             animation: pulse 4s ease-in-out infinite;
+
         }
 
         .tech-circle:nth-child(1) {
+
             top: 10%;
+
             left: 10%;
+
             width: 150px;
+
             height: 150px;
+
             animation-delay: 0s;
+
         }
 
         .tech-circle:nth-child(2) {
+
             top: 60%;
+
             right: 15%;
+
             width: 200px;
+
             height: 200px;
+
             animation-delay: 1s;
+
         }
 
         .tech-circle:nth-child(3) {
+
             bottom: 15%;
+
             left: 20%;
+
             width: 120px;
+
             height: 120px;
+
             animation-delay: 2s;
+
         }
 
         @keyframes pulse {
+
             0%, 100% { 
+
                 transform: scale(1);
+
                 opacity: 0.2;
+
             }
+
             50% { 
+
                 transform: scale(1.1);
+
                 opacity: 0.3;
+
             }
+
         }
 /* ==========================================
+
            الجزء 2: أزرار التحكم والهيدر
+
         ========================================== */
 
         .controls-container {
+
             position: fixed;
+
             top: 20px;
+
             left: 0;
+
             right: 0;
+
             z-index: 1000;
+
             pointer-events: none;
+
         }
 
         .theme-toggle-container {
+
             position: fixed;
+
             top: 20px;
+
             right: 20px;
+
             z-index: 1001;
+
             pointer-events: auto;
+
         }
 
         .view-toggle-container {
+
             position: fixed;
+
             top: 20px;
+
             left: 20px;
+
             z-index: 1001;
+
             pointer-events: auto;
+
         }
 
         .theme-toggle, .view-toggle {
+
             background: transparent;
+
             backdrop-filter: blur(30px);
+
             -webkit-backdrop-filter: blur(30px);
+
             border-radius: 50px;
+
             padding: 2px;
+
             cursor: pointer;
+
             transition: all 0.3s ease;
+
             box-shadow: 
+
                 0 8px 32px var(--glass-shadow), 
+
                 0 0 20px rgba(220, 38, 38, 0.2),
+
                 0 0 20px rgba(59, 130, 246, 0.2),
+
                 inset 0 1px 0 rgba(255, 255, 255, 0.1);
+
             display: flex;
+
             flex-direction: column;
+
             align-items: center;
+
             width: 24px;
+
             height: 48px;
+
             position: relative;
+
         }
 
         .theme-toggle::before, .view-toggle::before {
+
             content: '';
+
             position: absolute;
+
             inset: -2px;
+
             border-radius: 50px;
+
             padding: 2px;
+
             background: linear-gradient(180deg, rgba(220, 38, 38, 0.8), rgba(59, 130, 246, 0.8));
+
             -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+
             -webkit-mask-composite: xor;
+
             mask-composite: exclude;
+
             pointer-events: none;
+
         }
 
         .theme-toggle:hover, .view-toggle:hover {
+
             box-shadow: 
+
                 0 12px 40px var(--glass-shadow), 
+
                 0 0 30px rgba(220, 38, 38, 0.4),
+
                 0 0 30px rgba(59, 130, 246, 0.4),
+
                 inset 0 1px 0 rgba(255, 255, 255, 0.2);
+
             background: rgba(255, 255, 255, 0.05);
+
             transform: translateY(-2px);
+
         }
 
         .theme-slider, .view-slider {
+
             position: absolute;
+
             width: 20px;
+
             height: 20px;
+
             background: linear-gradient(135deg, var(--accent-color), #8b5cf6);
+
             border-radius: 50%;
+
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
             display: flex;
+
             align-items: center;
+
             justify-content: center;
+
             font-size: 10px;
+
             box-shadow: 0 4px 12px rgba(59, 130, 246, 0.5);
+
         }
 
         [data-theme="dark"] .theme-slider {
+
             top: 2px;
+
         }
 
         [data-theme="light"] .theme-slider {
+
             top: calc(100% - 22px);
+
         }
 
         .view-slider {
+
             top: 2px;
+
         }
 
         .view-slider.list-active {
+
             top: calc(100% - 22px);
+
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 0;
             position: relative;
             z-index: 1;
-            height: 100%;
+            height: 100vh;
             display: flex;
             flex-direction: column;
             overflow: hidden;
@@ -529,558 +938,998 @@
 
         .header {
             text-align: center;
-            margin-bottom: 30px;
             flex-shrink: 0;
-            padding-top: 10px;
+            padding: 70px 20px 20px;
+            position: relative;
+            z-index: 10;
         }
 
         .brand-name {
+
             color: var(--text-primary);
+
             font-size: clamp(28px, 5vw, 48px);
+
             font-weight: 800;
+
             margin-bottom: 15px;
+
             letter-spacing: 3px;
+
             animation: fadeInDown 0.8s ease;
+
             display: flex;
+
             align-items: center;
+
             justify-content: center;
+
             gap: 15px;
+
             position: relative;
+
             text-transform: uppercase;
+
         }
 
         .brand-name::before {
+
             content: '';
+
             position: absolute;
+
             bottom: -8px;
+
             left: 50%;
+
             transform: translateX(-50%);
+
             width: 60%;
+
             height: 3px;
+
             background: linear-gradient(90deg, transparent, var(--accent-color), transparent);
+
             border-radius: 10px;
+
             animation: glow 2s ease-in-out infinite;
+
         }
 
         @keyframes glow {
+
             0%, 100% { 
+
                 opacity: 0.5;
+
                 box-shadow: 0 0 10px var(--accent-color);
+
             }
+
             50% { 
+
                 opacity: 1;
+
                 box-shadow: 0 0 20px var(--accent-color);
+
             }
+
         }
 
         .brand-name span:last-child {
+
             background: linear-gradient(135deg, var(--accent-color), #8b5cf6, var(--accent-color));
+
             background-size: 200% 200%;
+
             -webkit-background-clip: text;
+
             -webkit-text-fill-color: transparent;
+
             background-clip: text;
+
             animation: gradientText 3s ease infinite;
+
             font-weight: 900;
+
         }
 
         @keyframes gradientText {
+
             0%, 100% { background-position: 0% 50%; }
+
             50% { background-position: 100% 50%; }
+
         }
 
         .brand-icon {
+
             font-size: clamp(32px, 5.5vw, 52px);
+
             filter: drop-shadow(0 4px 20px var(--accent-color));
+
             animation: float 3s ease-in-out infinite;
+
         }
 
         @keyframes float {
+
             0%, 100% { transform: translateY(0px); }
+
             50% { transform: translateY(-10px); }
+
         }
 
         @keyframes fadeInDown {
+
             from {
+
                 opacity: 0;
+
                 transform: translateY(-30px);
+
             }
+
             to {
+
                 opacity: 1;
+
                 transform: translateY(0);
+
             }
+
         }
 
         .brand-subtitle {
+
             color: var(--text-secondary);
+
             font-size: clamp(12px, 1.5vw, 16px);
+
             font-weight: 400;
+
             letter-spacing: 2px;
+
             animation: fadeInUp 0.8s ease 0.2s both;
+
             text-transform: uppercase;
+
             position: relative;
+
             display: inline-block;
+
             padding: 0 20px;
+
         }
 
         .brand-subtitle::before,
+
         .brand-subtitle::after {
+
             content: '';
+
             position: absolute;
+
             top: 50%;
+
             width: 40px;
+
             height: 1px;
+
             background: linear-gradient(90deg, transparent, var(--accent-color));
+
         }
 
         .brand-subtitle::before {
+
             right: 100%;
+
             margin-right: 10px;
+
         }
 
         .brand-subtitle::after {
+
             left: 100%;
+
             margin-left: 10px;
+
             background: linear-gradient(90deg, var(--accent-color), transparent);
+
         }
 
         @keyframes fadeInUp {
+
             from {
+
                 opacity: 0;
+
                 transform: translateY(30px);
+
             }
+
             to {
+
                 opacity: 1;
+
                 transform: translateY(0);
+
             }
+
         }
 
         /* ==========================================
+
            الجزء 3: شبكة التطبيقات والكروت
+
         ========================================== */
+
+        .apps-container {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .apps-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .apps-container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .apps-container::-webkit-scrollbar-thumb {
+            background: var(--glass-border);
+            border-radius: 10px;
+        }
+
+        .apps-container::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-color);
+        }
 
         .apps-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: clamp(15px, 2vw, 40px);
             max-width: clamp(500px, 50vw, 900px);
-            margin: auto;
-            flex: 0 1 auto;
+            margin: 0 auto;
             transition: all 0.4s ease;
             width: 100%;
-            align-content: center;
-            min-height: 0;
         }
 
         .apps-grid.list-view {
+
             grid-template-columns: 1fr;
+
             max-width: clamp(400px, 45vw, 700px);
+
             align-content: start;
+
         }
 
         .app-card {
+
             background: rgba(0, 0, 0, 0.02);
+
             backdrop-filter: blur(5px) saturate(100%);
+
             -webkit-backdrop-filter: blur(5px) saturate(100%);
+
             border-radius: clamp(16px, 2vw, 24px);
+
             padding: clamp(16px, 2.5vw, 35px) clamp(14px, 2vw, 30px);
+
             border: 2px solid rgba(220, 38, 38, 0.6);
+
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
             box-shadow: 
+
                 0 20px 60px rgba(0, 0, 0, 0.5),
+
                 0 0 20px rgba(220, 38, 38, 0.4),
+
                 0 0 40px rgba(220, 38, 38, 0.25),
+
                 inset 0 1px 0 rgba(255, 255, 255, 0.05);
+
             animation: fadeIn 0.8s ease;
+
             position: relative;
+
             overflow: visible;
+
             cursor: pointer;
+
             display: flex;
+
             flex-direction: column;
+
             align-items: center;
+
             text-align: center;
+
         }
 
         [data-theme="light"] .app-card {
+
             background: rgba(255, 255, 255, 0.1);
+
             backdrop-filter: blur(5px) saturate(100%);
+
             -webkit-backdrop-filter: blur(5px) saturate(100%);
+
             border: 2px solid rgba(220, 38, 38, 0.6);
+
             box-shadow: 
+
                 0 20px 60px rgba(0, 0, 0, 0.2),
+
                 0 0 20px rgba(220, 38, 38, 0.35),
+
                 0 0 40px rgba(220, 38, 38, 0.2),
+
                 inset 0 1px 0 rgba(255, 255, 255, 0.3);
+
         }
 
         .apps-grid.list-view .app-card {
+
             flex-direction: row;
+
             text-align: right;
+
             padding: 18px;
+
         }
 
         .apps-grid.list-view .app-icon {
+
             margin-bottom: 0;
+
             margin-left: 18px;
+
             flex-shrink: 0;
+
         }
 
         .apps-grid.list-view .app-content {
+
             flex: 1;
+
             display: flex;
+
             flex-direction: column;
+
             align-items: flex-start;
+
         }
 
         .apps-grid.list-view .app-description {
+
             text-align: right;
+
         }
 
         .apps-grid.list-view .view-details-btn {
+
             align-self: flex-start;
+
         }
 
         @keyframes fadeIn {
+
             from {
+
                 opacity: 0;
+
                 transform: scale(0.95);
+
             }
+
             to {
+
                 opacity: 1;
+
                 transform: scale(1);
+
             }
+
         }
 
         .app-card:hover {
+
             transform: translateY(-8px);
+
             border-color: rgba(220, 38, 38, 0.9);
+
             background: rgba(0, 0, 0, 0.05);
+
             box-shadow: 
+
                 0 25px 70px rgba(0, 0, 0, 0.6),
+
                 0 0 30px rgba(220, 38, 38, 0.6),
+
                 0 0 50px rgba(220, 38, 38, 0.35),
+
                 inset 0 1px 0 rgba(255, 255, 255, 0.1);
+
         }
 
         [data-theme="light"] .app-card:hover {
+
             background: rgba(255, 255, 255, 0.2);
+
         }
 
         .apps-grid.list-view .app-card:hover {
-            transform: translateX(-8px);
-        }
 
-        .app-icon {
+            transform: translateX(-8px);
+
+        }
+.app-icon {
+
             width: clamp(45px, 5.5vw, 70px);
+
             height: clamp(45px, 5.5vw, 70px);
+
             margin-bottom: clamp(10px, 1.5vw, 20px);
+
             background: linear-gradient(135deg, var(--accent-color), #8b5cf6);
+
             border-radius: clamp(12px, 1.8vw, 16px);
+
             display: flex;
+
             align-items: center;
+
             justify-content: center;
+
             font-size: clamp(24px, 2.8vw, 38px);
+
             box-shadow: 
+
                 0 8px 25px rgba(59, 130, 246, 0.4),
+
                 inset 0 1px 0 rgba(255, 255, 255, 0.2);
+
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
         }
 
         .app-card:hover .app-icon {
+
             transform: scale(1.15) rotate(5deg);
+
             box-shadow: 
+
                 0 12px 40px rgba(59, 130, 246, 0.6),
+
                 inset 0 1px 0 rgba(255, 255, 255, 0.3);
+
         }
 
         .app-content {
+
             display: flex;
+
             flex-direction: column;
+
             align-items: center;
+
             width: 100%;
+
         }
 
         .app-name {
+
             color: var(--text-primary);
+
             font-size: clamp(14px, 1.8vw, 24px);
+
             font-weight: 800;
+
             margin-bottom: clamp(6px, 1vw, 12px);
+
             letter-spacing: 0.3px;
+
         }
 
         .app-description {
+
             color: var(--text-secondary);
+
             font-size: clamp(11px, 1.3vw, 16px);
+
             line-height: 1.4;
+
             text-align: center;
+
             margin-bottom: clamp(10px, 1.5vw, 18px);
+
         }
 
         .view-details-btn {
+
             background: var(--btn-bg);
+
             backdrop-filter: blur(20px);
+
             -webkit-backdrop-filter: blur(20px);
+
             color: var(--text-primary);
+
             border: 1px solid var(--glass-border);
-            padding: 4px 10px;
-            font-size: 9px;
+
+            padding: 3px 8px;
+
+            font-size: 8px;
+
             border-radius: 50px;
+
             cursor: pointer;
+
             transition: all 0.3s ease;
+
             font-weight: 700;
-            letter-spacing: 0.3px;
-            box-shadow: 0 4px 15px var(--glass-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+
+            letter-spacing: 0.2px;
+
+            box-shadow: 0 3px 12px var(--glass-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+
             display: inline-flex;
+
             align-items: center;
+
             justify-content: center;
-            gap: 3px;
+
+            gap: 2px;
+
             white-space: nowrap;
+
         }
 
         .view-details-btn:hover {
+
             background: var(--btn-hover-bg);
+
             transform: translateY(-2px);
+
             box-shadow: 0 6px 20px var(--glass-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+
         }
 
         .loading-spinner {
+
             display: inline-block;
+
             width: 14px;
+
             height: 14px;
+
             border: 2px solid rgba(255,255,255,0.3);
+
             border-radius: 50%;
+
             border-top-color: #fff;
+
             animation: spin 0.6s linear infinite;
+
         }
 
         @keyframes spin {
+
             to { transform: rotate(360deg); }
+
         }
+
 /* ==========================================
+
            الجزء 4: الديالوجز والنوافذ المنبثقة
+
         ========================================== */
 
         .dialog-overlay {
+
             position: fixed;
+
             top: 0;
+
             left: 0;
+
             right: 0;
+
             bottom: 0;
+
             background: rgba(0, 0, 0, 0.4);
+
             backdrop-filter: blur(8px);
+
             -webkit-backdrop-filter: blur(8px);
+
             display: none;
+
             justify-content: center;
+
             align-items: center;
+
             z-index: 2000;
+
             padding: 20px;
+
             animation: fadeInOverlay 0.3s ease;
+
         }
 
         [data-theme="light"] .dialog-overlay {
+
             background: rgba(186, 230, 253, 0.4);
+
         }
 
         .dialog-overlay.active {
+
             display: flex;
+
         }
 
         @keyframes fadeInOverlay {
+
             from { opacity: 0; }
+
             to { opacity: 1; }
+
         }
 
         .dialog-content {
+
             background: rgba(20, 20, 20, 0.6);
+
             backdrop-filter: blur(50px) saturate(150%);
+
             -webkit-backdrop-filter: blur(50px) saturate(150%);
+
             border-radius: 24px;
+
             padding: 30px 25px;
+
             border: 1.5px solid rgba(220, 38, 38, 0.4);
+
             box-shadow: 
+
                 0 20px 60px rgba(0, 0, 0, 0.5),
+
                 0 0 20px rgba(220, 38, 38, 0.3),
+
                 0 0 40px rgba(220, 38, 38, 0.2),
+
                 inset 0 1px 0 rgba(255, 255, 255, 0.1);
+
             max-width: 550px;
+
             width: 100%;
+
             max-height: 85vh;
+
             overflow-y: auto;
+
             position: relative;
+
             animation: slideUpDialog 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+
         }
 
         [data-theme="light"] .dialog-content {
+
             background: rgba(240, 248, 255, 0.8);
+
             border: 1.5px solid rgba(220, 38, 38, 0.4);
+
             box-shadow: 
+
                 0 20px 60px rgba(0, 0, 0, 0.2),
+
                 0 0 20px rgba(220, 38, 38, 0.25),
+
                 0 0 40px rgba(220, 38, 38, 0.15),
+
                 inset 0 1px 0 rgba(255, 255, 255, 0.5);
+
         }
 
         @keyframes slideUpDialog {
+
             from {
+
                 opacity: 0;
+
                 transform: translateY(60px) scale(0.9);
+
             }
+
             to {
+
                 opacity: 1;
+
                 transform: translateY(0) scale(1);
+
             }
+
         }
 
         .dialog-close {
+
             position: absolute;
+
             top: 20px;
+
             left: 20px;
+
             background: var(--card-bg);
+
             backdrop-filter: blur(20px);
+
             -webkit-backdrop-filter: blur(20px);
+
             border: 1px solid var(--glass-border);
+
             border-radius: 50%;
+
             width: 38px;
+
             height: 38px;
+
             display: flex;
+
             align-items: center;
+
             justify-content: center;
+
             cursor: pointer;
+
             transition: all 0.3s ease;
+
             font-size: 22px;
+
             color: var(--text-secondary);
+
             box-shadow: 0 4px 15px var(--glass-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+
             z-index: 10;
+
         }
 
         .dialog-close:hover {
+
             background: linear-gradient(135deg, var(--accent-color), #8b5cf6);
+
             transform: rotate(90deg) scale(1.1);
+
             color: #ffffff;
+
             box-shadow: 0 6px 25px rgba(59, 130, 246, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+
             border-color: transparent;
+
         }
 
         .dialog-header {
+
             text-align: center;
+
             margin-bottom: 20px;
+
             position: relative;
+
             z-index: 1;
+
         }
 
         .dialog-icon {
+
             width: 70px;
+
             height: 70px;
+
             margin: 0 auto 15px;
+
             background: linear-gradient(135deg, var(--accent-color), #8b5cf6);
+
             border-radius: 18px;
+
             display: flex;
+
             align-items: center;
+
             justify-content: center;
+
             font-size: 36px;
+
             box-shadow: 
+
                 0 10px 30px rgba(59, 130, 246, 0.4),
+
                 inset 0 1px 0 rgba(255, 255, 255, 0.2);
+
         }
 
         .dialog-name {
+
             color: var(--text-primary);
+
             font-size: 22px;
+
             font-weight: 800;
+
             margin-bottom: 8px;
+
             letter-spacing: 0.5px;
+
         }
 
         .dialog-description {
+
             color: var(--text-secondary);
+
             font-size: 13px;
+
             line-height: 1.6;
+
             margin-bottom: 20px;
+
         }
 
         .features-title {
+
             color: var(--text-primary);
+
             font-size: 13px;
+
             font-weight: 800;
+
             text-transform: uppercase;
+
             letter-spacing: 0.8px;
+
             margin-bottom: 12px;
+
             text-align: center;
+
         }
 
         .features-grid {
+
             display: grid;
+
             grid-template-columns: repeat(3, 1fr);
+
             gap: 10px;
+
             margin-bottom: 20px;
+
         }
 
         .feature-item {
+
             background: var(--card-bg);
+
             backdrop-filter: blur(30px);
+
             -webkit-backdrop-filter: blur(30px);
+
             padding: 12px 6px;
+
             border-radius: 12px;
+
             border: 1px solid var(--glass-border);
+
             transition: all 0.3s ease;
+
             text-align: center;
+
             display: flex;
+
             flex-direction: column;
+
             align-items: center;
+
             gap: 5px;
+
             box-shadow: 0 4px 15px var(--glass-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+
         }
 
         .feature-item:hover {
+
             background: var(--card-hover-bg);
+
             transform: translateY(-3px);
+
             border-color: var(--accent-color);
+
             box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3);
+
         }
 
         .feature-icon {
+
             color: var(--accent-color);
+
             font-size: 20px;
+
         }
 
         .feature-text {
+
             color: var(--text-primary);
+
             font-size: 10px;
+
             font-weight: 700;
+
             line-height: 1.2;
+
         }
 
         .download-btn {
+
             background: linear-gradient(135deg, var(--accent-color), #8b5cf6);
+
             color: #ffffff;
+
             border: none;
+
             padding: 12px 30px;
+
             font-size: 14px;
+
             border-radius: 50px;
+
             cursor: pointer;
+
             transition: all 0.3s ease;
+
             font-weight: 800;
+
             letter-spacing: 0.5px;
+
             box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+
             width: 100%;
+
             display: flex;
+
             align-items: center;
+
             justify-content: center;
+
             gap: 8px;
+
         }
 
         .download-btn:hover {
+
             transform: translateY(-2px);
+
             box-shadow: 0 12px 30px rgba(59, 130, 246, 0.6);
+
         }
 
         .download-btn:disabled {
+
             opacity: 0.5;
+
             cursor: not-allowed;
+
         }
 
         .footer {
             text-align: center;
-            padding: 10px;
+            padding: 15px 20px;
             border-top: 1px solid var(--border-color);
             color: var(--text-secondary);
             font-size: 11px;
@@ -1093,225 +1942,436 @@
             position: relative;
             z-index: 10;
         }
+/* ==========================================
 
-        /* ==========================================
            الجزء 5: التصميم المتجاوب
+
         ========================================== */
 
+@media (max-width: 768px) {
+            .header {
+                padding: 60px 15px 15px;
+            }
+            
+            .apps-container {
+                padding: 15px;
+            }
+            
+            .footer {
+                padding: 12px 15px;
+            }
+        }
+
         @media (min-width: 481px) and (max-width: 768px) {
+
             .apps-grid {
+
                 grid-template-columns: 1fr !important;
+
                 max-width: clamp(350px, 60vw, 500px) !important;
+
             }
+
             
+
             .apps-grid .app-card { 
+
                 flex-direction: row !important;
+
                 text-align: right !important;
+
                 padding: 18px !important;
+
             }
+
             
+
             .apps-grid .app-icon { 
+
                 margin-bottom: 0 !important;
+
                 margin-left: 18px !important;
+
                 flex-shrink: 0 !important;
+
             }
+
             
+
             .apps-grid .app-content { 
+
                 flex: 1 !important;
+
                 display: flex !important;
+
                 flex-direction: column !important;
+
                 align-items: flex-start !important;
+
             }
+
             
+
             .apps-grid .app-description { 
+
                 text-align: right !important;
+
             }
+
             
+
             .apps-grid .view-details-btn { 
+
                 align-self: flex-start !important;
+
             }
+
             
+
             .apps-grid .app-card:hover {
+
                 transform: translateX(-8px) scale(1.01) !important;
+
             }
+
         }
 
         @media (max-width: 480px) {
+
             .apps-grid:not(.list-view) { 
+
                 grid-template-columns: repeat(2, 1fr) !important; 
+
                 max-width: 95% !important;
+
                 gap: clamp(8px, 2vw, 15px);
+
             }
+
             
+
             .apps-grid.list-view { 
+
                 grid-template-columns: 1fr !important; 
+
                 max-width: clamp(280px, 85vw, 350px) !important; 
+
             }
+
             
+
             .apps-grid.list-view .app-card { 
+
                 flex-direction: column !important; 
+
                 text-align: center !important; 
+
             }
+
             
+
             .apps-grid.list-view .app-icon { 
+
                 margin-left: 0 !important; 
+
                 margin-bottom: 12px !important; 
+
             }
+
             
+
             .apps-grid.list-view .app-content { 
+
                 align-items: center !important; 
+
             }
+
             
+
             .apps-grid.list-view .app-description { 
+
                 text-align: center !important; 
+
             }
+
             
+
             .apps-grid.list-view .view-details-btn { 
+
                 align-self: center !important; 
+
             }
+
             
+
             .features-grid {
+
                 grid-template-columns: repeat(2, 1fr);
+
             }
+
         }
 
         @media (max-width: 360px) {
+
             .brand-name {
+
                 font-size: 24px !important;
+
                 gap: 10px;
+
             }
+
             
+
             .brand-icon {
+
                 font-size: 28px !important;
+
             }
+
             
+
             .brand-subtitle {
+
                 font-size: 10px !important;
+
             }
+
             
+
             .theme-toggle-container,
+
             .view-toggle-container {
+
                 top: 15px;
+
             }
+
             
+
             .dialog-content {
+
                 padding: 25px 20px;
+
             }
+
         }
 
         @media (min-width: 1600px) {
+
             .container {
+
                 max-width: 1400px;
+
             }
+
             
+
             .apps-grid {
+
                 max-width: 1000px;
+
             }
+
         }
 
         @media (hover: none) and (pointer: coarse) {
+
             .app-card:hover {
+
                 transform: none;
+
             }
+
             
+
             .app-card:active {
+
                 transform: scale(0.98);
+
             }
+
             
+
             .view-details-btn:hover {
+
                 transform: none;
+
             }
+
             
+
             .view-details-btn:active {
+
                 transform: scale(0.95);
+
             }
+
         }
 
         @media (prefers-reduced-motion: reduce) {
+
             *,
+
             *::before,
+
             *::after {
+
                 animation-duration: 0.01ms !important;
+
                 animation-iteration-count: 1 !important;
+
                 transition-duration: 0.01ms !important;
+
             }
+
             
+
             .tech-line,
+
             .hacker-number,
+
             .tech-circle {
+
                 animation: none !important;
+
             }
+
         }
 
         @media print {
+
             .theme-toggle-container,
+
             .view-toggle-container,
+
             .tech-lines,
+
             .hacker-numbers,
+
             .tech-circles,
+
             body::before,
+
             body::after {
+
                 display: none !important;
+
             }
+
             
+
             .app-card {
+
                 break-inside: avoid;
+
             }
+
         }
+
     </style>
+
 </head>
+
 <body>
+
     <div class="tech-lines">
+
         <div class="tech-line" data-code="0x7A4F"></div>
+
         <div class="tech-line" data-code="1100101"></div>
+
         <div class="tech-line" data-code="0xBEEF"></div>
+
         <div class="tech-line" data-code="10110010"></div>
+
         <div class="tech-line" data-code="0x3C9A"></div>
+
         <div class="tech-line" data-code="11001011"></div>
+
         <div class="tech-line" data-code="0xF1D2"></div>
+
         <div class="tech-line" data-code="01011101"></div>
+
         <div class="tech-line"></div>
+
         <div class="tech-line"></div>
+
         <div class="tech-line"></div>
+
     </div>
 
     <div class="hacker-numbers">
+
         <div class="hacker-number">01001101</div>
+
         <div class="hacker-number">0xABCD</div>
+
         <div class="hacker-number">11010011</div>
+
         <div class="hacker-number">0xFF7E</div>
+
         <div class="hacker-number">10101001</div>
+
         <div class="hacker-number">0xDEAF</div>
+
         <div class="hacker-number">01110110</div>
+
         <div class="hacker-number">0x8E4B</div>
+
         <div class="hacker-number">11100101</div>
+
         <div class="hacker-number">0x5A2C</div>
+
         <div class="hacker-number">00111011</div>
+
         <div class="hacker-number">0x9F6D</div>
+
     </div>
 
     <div class="tech-circles">
+
         <div class="tech-circle"></div>
+
         <div class="tech-circle"></div>
+
         <div class="tech-circle"></div>
+
     </div>
 
     <div class="controls-container">
+
         <div class="theme-toggle-container">
+
             <div class="theme-toggle" onclick="toggleTheme()">
+
                 <div class="theme-slider" id="theme-slider">
+
                     <span id="theme-icon">☀️</span>
+
                 </div>
+
             </div>
+
         </div>
+
         
+
         <div class="view-toggle-container">
+
             <div class="view-toggle" onclick="toggleView()">
+
                 <div class="view-slider" id="view-slider">
+
                     <span id="view-icon">⊞</span>
+
                 </div>
+
             </div>
+
         </div>
+
     </div>
 
     <div class="container">
@@ -1322,331 +2382,597 @@
             </div>
             <div class="brand-subtitle">تطبيقات احترافية لتجربة مميزة</div>
         </div>
-
-        <div class="apps-grid" id="apps-grid"></div>
+        <div class="apps-container">
+            <div class="apps-grid" id="apps-grid"></div>
+        </div>
     </div>
 
     <div class="footer">
+
         <p>جميع الحقوق محفوظة © 2025 BinAref</p>
+
     </div>
 
     <div id="dialogs-container"></div>
+
 <script>
+
         // ==========================================
+
         //  إعدادات Supabase
+
         // ==========================================
+
         const SUPABASE_URL = 'https://ugmallekycxnzejydafw.supabase.co';
+
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVnbWFsbGVreWN4bnplanlkYWZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU2NTI1MjEsImV4cCI6MjA4MTIyODUyMX0.ITtbUhlsFM9y_v8e6ymSluGcqExzZq13Npz97z2KzLw';
+
         // دوال مساعدة للاتصال بـ Supabase
+
 async function supabaseQuery(table, options = {}) {
+
     const url = `${SUPABASE_URL}/rest/v1/${table}${options.query || ''}`;
+
     const response = await fetch(url, {
+
         method: options.method || 'GET',
+
         headers: {
+
             'apikey': SUPABASE_KEY,
+
             'Authorization': `Bearer ${SUPABASE_KEY}`,
+
             'Content-Type': 'application/json',
+
             'Prefer': 'return=representation'
+
         },
+
         body: options.body ? JSON.stringify(options.body) : undefined
+
     });
+
     
+
     if (!response.ok) {
+
         throw new Error(`HTTP error! status: ${response.status}`);
+
     }
+
     
+
     return await response.json();
+
 }
 
         let appsData = [];
+
         const featuresMap = {
+
             'azkari': [
-                { icon: '📚', text: 'مكتبة شاملة للأذكار' },
-                { icon: '🎨', text: 'تخصيص كامل للثيمات' },
-                { icon: '🔢', text: 'عداد ذكي ومرن' },
-                { icon: '✏️', text: 'أذكار ومذكرات مخصصة' },
-                { icon: '📱', text: 'تجربة استخدام سلسة' },
-                { icon: '⭐', text: 'أذكارك المفضلة' }
+
+                { feature_icon: '📚', feature_text: 'مكتبة شاملة للأذكار' },
+
+                { feature_icon: '🎨', feature_text: 'تخصيص كامل للثيمات' },
+
+                { feature_icon: '🔢', feature_text: 'عداد ذكي ومرن' },
+
+                { feature_icon: '✏️', feature_text: 'أذكار ومذكرات مخصصة' },
+
+                { feature_icon: '📱', feature_text: 'تجربة استخدام سلسة' },
+
+                { feature_icon: '⭐', feature_text: 'أذكارك المفضلة' }
+
             ],
+
             'ministry': [
-                { icon: '📝', text: 'المنشورات التفاعلية' },
-                { icon: '📖', text: 'مكتبة الكتب الرقمية' },
-                { icon: '🎬', text: 'مشغل الفيديوهات المتطور' },
-                { icon: '🎵', text: 'مشغل الصوتيات الذكي' },
-                { icon: '👨‍💼', text: 'لوحة تحكم المدير' },
-                { icon: '📊', text: 'إحصائيات متقدمة' }
+
+                { feature_icon: '📝', feature_text: 'المنشورات التفاعلية' },
+
+                { feature_icon: '📖', feature_text: 'مكتبة الكتب الرقمية' },
+
+                { feature_icon: '🎬', feature_text: 'مشغل الفيديوهات المتطور' },
+
+                { feature_icon: '🎵', feature_text: 'مشغل الصوتيات الذكي' },
+
+                { feature_icon: '👨‍💼', feature_text: 'لوحة تحكم المدير' },
+
+                { feature_icon: '📊', feature_text: 'إحصائيات متقدمة' }
+
             ],
+
             'voicelink': [
-                { icon: '🎙️', text: 'بث صوتي بجودة عالية' },
-                { icon: '📡', text: 'اكتشاف تلقائي للأجهزة' },
-                { icon: '👥', text: 'دعم عدة مستمعين' },
-                { icon: '⚡', text: 'أداء فائق السرعة' },
-                { icon: '🔐', text: 'مصادقة آمنة' },
-                { icon: '🌐', text: 'اتصال مباشر P2P' }
+
+                { feature_icon: '🎙️', feature_text: 'بث صوتي بجودة عالية' },
+
+                { feature_icon: '📡', feature_text: 'اكتشاف تلقائي للأجهزة' },
+
+                { feature_icon: '👥', feature_text: 'دعم عدة مستمعين' },
+
+                { feature_icon: '⚡', feature_text: 'أداء فائق السرعة' },
+
+                { feature_icon: '🔐', feature_text: 'مصادقة آمنة' },
+
+                { feature_icon: '🌐', feature_text: 'اتصال مباشر P2P' }
+
             ]
+
         };
 
         // ==========================================
+
         //  تحميل التطبيقات من Supabase
+
         // ==========================================
+
         async function loadApps() {
+
     try {
+
         console.log('🔄 جاري تحميل التطبيقات...');
+
         
+
         const data = await supabaseQuery('apps', {
-            query: '?select=*'
+
+            query: '?select=*,features(*)'
+
         });
 
         console.log('✅ تم تحميل', data.length, 'تطبيقات:', data);
 
         if (!data || data.length === 0) {
+
             console.warn('⚠️ لا توجد بيانات');
+
             alert('⚠️ لا توجد تطبيقات في قاعدة البيانات!\n\nيرجى:\n1. تنفيذ SQL Scripts في Supabase\n2. إيقاف Row Level Security');
+
             return;
+
         }
 
         appsData = data;
+
         renderApps();
+
         renderDialogs();
+
     } catch (error) {
+
         console.error('❌ خطأ في تحميل التطبيقات:', error);
+
         alert('⚠️ خطأ في تحميل البيانات:\n' + error.message + '\n\nتأكد من:\n1. Row Level Security معطل\n2. البيانات موجودة في جدول apps');
+
     }
+
 }
 
         // ==========================================
+
         //  عرض التطبيقات
+
         // ==========================================
+
         function renderApps() {
+
             const grid = document.getElementById('apps-grid');
+
             grid.innerHTML = appsData.map(app => `
+
                 <div class="app-card" onclick="openDialog('${app.app_id}')">
+
                     <div class="app-icon">${app.app_icon}</div>
+
                     <div class="app-content">
+
                         <div class="app-name">${app.app_name}</div>
+
                         <div class="app-description">${app.description}</div>
+
                         <button class="view-details-btn" onclick="event.stopPropagation(); openDialog('${app.app_id}')">
+
                             <span>📋</span>
+
                             <span>التفاصيل</span>
+
                         </button>
+
                     </div>
+
                 </div>
+
             `).join('');
+
         }
 
         // ==========================================
+
         //  عرض نوافذ التفاصيل
+
         // ==========================================
+
         function renderDialogs() {
+
             const container = document.getElementById('dialogs-container');
+
             container.innerHTML = appsData.map(app => {
-                const features = featuresMap[app.app_id] || [];
+
+                // استخدام الميزات من قاعدة البيانات أو المصفوفة الاحتياطية
+
+                const features = (app.features && app.features.length > 0) 
+
+                    ? app.features.sort((a, b) => (a.display_order || 0) - (b.display_order || 0))
+
+                    : featuresMap[app.app_id] || [];
+
+                
+
                 return `
+
                     <div class="dialog-overlay" id="dialog-${app.app_id}" onclick="closeDialogOnOverlay(event, '${app.app_id}')">
+
                         <div class="dialog-content" onclick="event.stopPropagation()">
+
                             <div class="dialog-close" onclick="closeDialog('${app.app_id}')">×</div>
+
                             <div class="dialog-header">
+
                                 <div class="dialog-icon">${app.app_icon}</div>
+
                                 <div class="dialog-name">${app.app_name}</div>
+
                                 <div class="dialog-description">${app.description}</div>
+
                             </div>
+
                             <div class="features-title">المميزات الرئيسية</div>
+
                             <div class="features-grid">
+
                                 ${features.map(f => `
+
                                     <div class="feature-item">
-                                        <span class="feature-icon">${f.icon}</span>
-                                        <div class="feature-text">${f.text}</div>
+
+                                        <span class="feature-icon">${f.feature_icon}</span>
+
+                                        <div class="feature-text">${f.feature_text}</div>
+
                                     </div>
+
                                 `).join('')}
+
                             </div>
+
                             <button class="download-btn" onclick="downloadApp('${app.app_id}')">
+
                                 <span>⬇</span>
+
                                 <span>تحميل التطبيق</span>
+
                             </button>
+
                         </div>
+
                     </div>
+
                 `;
+
             }).join('');
+
         }
 
         // ==========================================
+
         //  التحقق من كلمة السر وبدء التحميل
+
         // ==========================================
+
         async function downloadApp(appId) {
+
             const password = prompt('🔐 أدخل كلمة السر للتحميل:');
+
             
+
             if (!password) return;
 
             const btn = event.target.closest('.download-btn');
+
             btn.disabled = true;
+
             btn.innerHTML = '<span class="loading-spinner"></span> <span>جاري التحقق...</span>';
 
             try {
+
                 // التحقق من كلمة السر
-                // التحقق من كلمة السر
-const passwords = await supabaseQuery('passwords', {
-    query: `?app_id=eq.${appId}&password_key=eq.${password.trim()}&used=eq.false&select=*`
-});
 
-console.log('🔍 نتيجة البحث:', passwords);
+                const passwords = await supabaseQuery('passwords', {
 
-if (!passwords || passwords.length === 0) {
-    alert('❌ كلمة سر غير صحيحة أو مستخدمة مسبقاً');
-    btn.disabled = false;
-    btn.innerHTML = '<span>⬇</span> <span>تحميل التطبيق</span>';
-    return;
-}
+                    query: `?app_id=eq.${appId}&password_key=eq.${password.trim()}&used=eq.false&select=*`
 
-// تحديث حالة كلمة السر
-const passwordId = passwords[0].id;
-await supabaseQuery('passwords', {
-    method: 'PATCH',
-    query: `?id=eq.${passwordId}`,
-    body: { 
-        used: true, 
-        used_at: new Date().toISOString() 
-    }
-});
+                });
+
+                console.log('🔍 نتيجة البحث:', passwords);
+
+                if (!passwords || passwords.length === 0) {
+
+                    alert('❌ كلمة سر غير صحيحة أو مستخدمة مسبقاً');
+
+                    btn.disabled = false;
+
+                    btn.innerHTML = '<span>⬇</span> <span>تحميل التطبيق</span>';
+
+                    return;
+
+                }
+
+                // تحديث حالة كلمة السر
+
+                const passwordId = passwords[0].id;
+
+                await supabaseQuery('passwords', {
+
+                    method: 'PATCH',
+
+                    query: `?id=eq.${passwordId}`,
+
+                    body: { 
+
+                        used: true, 
+
+                        used_at: new Date().toISOString() 
+
+                    }
+
+                });
 
                 // الحصول على رابط التحميل
+
                 const app = appsData.find(a => a.app_id === appId);
+
                 if (app) {
+
                     alert('✅ تم التحقق بنجاح! جاري بدء التحميل...');
+
                     window.location.href = app.download_url;
+
                 }
 
                 btn.disabled = false;
+
                 btn.innerHTML = '<span>⬇</span> <span>تحميل التطبيق</span>';
+
                 closeDialog(appId);
 
             } catch (error) {
+
                 console.error('خطأ:', error);
+
                 alert('⚠️ حدث خطأ. يرجى المحاولة مرة أخرى.');
+
                 btn.disabled = false;
+
                 btn.innerHTML = '<span>⬇</span> <span>تحميل التطبيق</span>';
+
             }
+
         }
 
         // ==========================================
+
         //  دوال التحكم في العرض والثيم
+
         // ==========================================
+
         let isListView = false;
+
         let manualOverride = false;
 
         function getAutoViewMode() {
+
             const width = window.innerWidth;
+
             return (width >= 481 && width <= 768) ? 'list' : 'grid';
+
         }
 
         function applyViewMode(mode) {
+
             const grid = document.getElementById('apps-grid');
+
             const slider = document.getElementById('view-slider');
+
             const icon = document.getElementById('view-icon');
+
             
+
             isListView = (mode === 'list');
+
             
+
             if (isListView) {
+
                 grid.classList.add('list-view');
+
                 slider.classList.add('list-active');
+
                 icon.textContent = '☰';
+
             } else {
+
                 grid.classList.remove('list-view');
+
                 slider.classList.remove('list-active');
+
                 icon.textContent = '⊞';
+
             }
+
         }
 
         function toggleTheme() {
+
             const html = document.documentElement;
+
             const currentTheme = html.getAttribute('data-theme');
+
             const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+
             
+
             html.setAttribute('data-theme', newTheme);
+
             localStorage.setItem('theme', newTheme);
+
             updateThemeButton(newTheme);
+
         }
 
         function updateThemeButton(theme) {
+
             const icon = document.getElementById('theme-icon');
+
             icon.textContent = theme === 'light' ? '🌙' : '☀️';
+
         }
 
         function toggleView() {
+
             manualOverride = true;
+
             isListView = !isListView;
+
             const mode = isListView ? 'list' : 'grid';
+
             applyViewMode(mode);
+
             sessionStorage.setItem('manualViewMode', mode);
+
         }
 
         function openDialog(appId) {
+
             const dialog = document.getElementById('dialog-' + appId);
+
             if (dialog) dialog.classList.add('active');
+
         }
 
         function closeDialog(appId) {
+
             const dialog = document.getElementById('dialog-' + appId);
+
             if (dialog) dialog.classList.remove('active');
+
         }
 
         function closeDialogOnOverlay(event, appId) {
+
             if (event.target.classList.contains('dialog-overlay')) {
+
                 closeDialog(appId);
+
             }
+
         }
 
         // ==========================================
+
         //  تهيئة الصفحة عند التحميل
+
         // ==========================================
+
         document.addEventListener('DOMContentLoaded', () => {
+
             // تحميل الثيم
+
             let savedTheme = localStorage.getItem('theme');
+
             if (!savedTheme) {
+
                 const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
                 savedTheme = prefersDark ? 'dark' : 'light';
+
             }
+
             document.documentElement.setAttribute('data-theme', savedTheme);
+
             updateThemeButton(savedTheme);
 
             window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+
                 if (!localStorage.getItem('theme')) {
+
                     const newTheme = e.matches ? 'dark' : 'light';
+
                     document.documentElement.setAttribute('data-theme', newTheme);
+
                     updateThemeButton(newTheme);
+
                 }
+
             });
 
             // تحميل وضع العرض
+
             const manualMode = sessionStorage.getItem('manualViewMode');
+
             if (manualMode) {
+
                 manualOverride = true;
+
                 applyViewMode(manualMode);
+
             } else {
+
                 applyViewMode(getAutoViewMode());
+
             }
 
             // تحميل التطبيقات من Supabase
+
             loadApps();
+
         });
 
         // التعامل مع تغيير حجم النافذة
+
         let resizeTimer;
+
         window.addEventListener('resize', () => {
+
             clearTimeout(resizeTimer);
+
             resizeTimer = setTimeout(() => {
+
                 if (!manualOverride) {
+
                     applyViewMode(getAutoViewMode());
+
                 }
+
             }, 250);
+
         });
 
         // إغلاق النوافذ بزر Escape
+
         document.addEventListener('keydown', (e) => {
+
             if (e.key === 'Escape') {
+
                 const activeDialog = document.querySelector('.dialog-overlay.active');
+
                 if (activeDialog) activeDialog.classList.remove('active');
+
             }
+
         });
+
     </script>
+
 </body>
+
 </html>
